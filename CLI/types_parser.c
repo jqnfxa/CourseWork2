@@ -64,7 +64,7 @@ bool parse_int(int *val, const char *option_name, int base)
 	return true;
 }
 
-bool parse_file_name(char **name, const char *option_name)
+bool parse_file_name(char *name, const char *option_name)
 {
 	if(name == NULL)
 	{
@@ -77,10 +77,11 @@ bool parse_file_name(char **name, const char *option_name)
 	}
 	if(!is_valid_bmp(optarg))
 	{
+		log_error(CONVERSATION_ERROR, "--new");
 		return false;
 	}
 
-	strcpy(*name, optarg);
+	strcpy(name, optarg);
 	return true;
 }
 

@@ -174,7 +174,7 @@ bool parse_circle_request(int argc, char *argv[], char *file_name, CircleRequest
 				check_sum |= (1 << 4);
 				break;
 			case 'n':
-				if(!parse_file_name((char **)&request->new_file, long_options[operation_index].name))
+				if(!parse_file_name(request->new_file, long_options[operation_index].name))
 				{
 					return false;
 				}
