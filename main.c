@@ -1,9 +1,16 @@
 #include "CLI/cli.h"
+#include "CLI/rectangle_parser.h"
+#include "CLI/circle_parser.h"
+#include "CLI/frame_parser.h"
+#include "CLI/rotate_parser.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])
 {
 	char file_to_process[256];
+
+	// TODO library for read/write to .bmp
+	// TODO functions for drawing, rotating ...
 
 	switch(parse_user_command(argc, argv))
 	{
