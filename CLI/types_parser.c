@@ -1,27 +1,26 @@
-#include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include "../ExceptionHandler/error_handler.h"
 #include "types_parser.h"
 
-bool parse_point_values(Point *point, const char *option_name)
+bool parse_point_values(const char *argument, Point *point, const char *option_name)
 {
-	if(optarg == NULL)
+	if(argument == NULL)
 	{
 		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
 
-	char *copy = (char *)malloc((strlen(optarg) + 1) * sizeof(char));
-	strcpy(copy, optarg);
+	char *copy = (char *)malloc((strlen(argument) + 1) * sizeof(char));
+	strcpy(copy, argument);
 
 	int parsed[2] = {0, 0};
 	int i = 0;
 	char *token = NULL;
 	for(token = strtok(copy, ","); i < 2 && token != NULL; token = strtok(NULL, ","), ++i)
 	{
-		if(!parse_int(parsed + i, option_name, 10))
+		if(!parse_int(token, parsed + i, option_name, 10))
 		{
 			free(copy);
 			return false;
@@ -42,18 +41,18 @@ bool parse_point_values(Point *point, const char *option_name)
 	return true;
 }
 
-bool parse_int(int *val, const char *option_name, int base)
+bool parse_int(const char *argument, int *val, const char *option_name, int base)
 {
 	if(val == NULL)
 	{
 		return false;
 	}
-	if(optarg == NULL)
+	if(argument == NULL)
 	{
 		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
-	*val = (int)strtol(optarg, NULL, base);
+	*val = (int)strtol(argument, NULL, base);
 
 	if(errno == EINVAL || errno == ERANGE)
 	{
@@ -64,30 +63,30 @@ bool parse_int(int *val, const char *option_name, int base)
 	return true;
 }
 
-bool parse_file_name(char *name, const char *option_name)
+bool parse_file_name(const char *argument, char *name, const char *option_name)
 {
 	if(name == NULL)
 	{
 		return false;
 	}
-	if(optarg == NULL)
+	if(argument == NULL)
 	{
 		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
-	if(!is_valid_bmp(optarg))
+	if(!is_valid_bmp(argument))
 	{
 		log_error(CONVERSATION_ERROR, "--new");
 		return false;
 	}
 
-	strcpy(name, optarg);
+	strcpy(name, argument);
 	return true;
 }
 
-bool parse_color(int *color, const char *option_name)
+bool parse_color(const char *argument, int *color, const char *option_name)
 {
-	return parse_int(color, option_name, 16);
+	return parse_int(argument, color, option_name, 16);
 }
 
 bool is_valid_bmp(const char *file_name)

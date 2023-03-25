@@ -60,34 +60,37 @@ bool parse_frame_request(int argc, char *argv[], char *file_name, FrameRequest *
 			{0, 0, 0, 0}
 		};
 
+
+	memset(request, 0, sizeof(FrameRequest));
+
 	int operation, operation_index = 0;
 	while((operation = getopt_long(argc, argv, "t:c:w:n:", long_options, &operation_index)) != -1)
 	{
 		switch(operation)
 		{
 			case 't':
-				if(!parse_int(&request->type, long_options[operation_index].name, 10))
+				if(!parse_int(optarg, &request->type, long_options[operation_index].name, 10))
 				{
 					return false;
 				}
 				request->check_sum |= (1 << 0);
 				break;
 			case 'c':
-				if(!parse_color(&request->color, long_options[operation_index].name))
+				if(!parse_color(optarg, &request->color, long_options[operation_index].name))
 				{
 					return false;
 				}
 				request->check_sum |= (1 << 1);
 				break;
 			case 'w':
-				if(!parse_int(&request->width, long_options[operation_index].name, 10))
+				if(!parse_int(optarg, &request->width, long_options[operation_index].name, 10))
 				{
 					return false;
 				}
 				request->check_sum |= (1 << 2);
 				break;
 			case 'n':
-				if(!parse_file_name(request->new_file, long_options[operation_index].name))
+				if(!parse_file_name(optarg, request->new_file, long_options[operation_index].name))
 				{
 					return false;
 				}

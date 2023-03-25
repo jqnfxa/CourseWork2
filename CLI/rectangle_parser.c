@@ -16,8 +16,8 @@ bool validate_rectangle(RectangleRequest *request)
 		log_error(MISSING_ARGUMENT, "--start | --end");
 		return false;
 	}
-	if(request->left_up.x < 0 || request->left_up.x < request->right_bottom.x ||
-	   request->left_up.y < 0 || request->left_up.y < request->right_bottom.y)
+	if(request->left_up.x < 0 || request->left_up.x > request->right_bottom.x ||
+	   request->left_up.y < 0 || request->left_up.y > request->right_bottom.y)
 	{
 		log_error(CONVERSATION_ERROR, "--start | --end");
 		return false;
@@ -87,42 +87,42 @@ bool parse_rectangle_request(int argc, char *argv[], char *file_name, RectangleR
 		switch(operation)
 		{
 			case 's':
-				if(!parse_point_values(&request->left_up, long_options[operation_index].name))
+				if(!parse_point_values(optarg, &request->left_up, long_options[operation_index].name))
 				{
 					return false;
 				}
 				request->check_sum |= (1 << 0);
 				break;
 			case 'e':
-				if(!parse_point_values(&request->right_bottom, long_options[operation_index].name))
+				if(!parse_point_values(optarg, &request->right_bottom, long_options[operation_index].name))
 				{
 					return false;
 				}
 				request->check_sum |= (1 << 1);
 				break;
 			case 'w':
-				if(!parse_int(&request->width, long_options[operation_index].name, 10))
+				if(!parse_int(optarg, &request->width, long_options[operation_index].name, 10))
 				{
 					return false;
 				}
 				request->check_sum |= (1 << 3);
 				break;
 			case 'c':
-				if(!parse_color(&request->color, long_options[operation_index].name))
+				if(!parse_color(optarg, &request->color, long_options[operation_index].name))
 				{
 					return false;
 				}
 				request->check_sum |= (1 << 2);
 				break;
 			case 'f':
-				if(!parse_color(&request->fill_color, long_options[operation_index].name))
+				if(!parse_color(optarg, &request->fill_color, long_options[operation_index].name))
 				{
 					return false;
 				}
 				request->check_sum |= (1 << 4);
 				break;
 			case 'n':
-				if(!parse_file_name(request->new_file, long_options[operation_index].name))
+				if(!parse_file_name(optarg, request->new_file, long_options[operation_index].name))
 				{
 					return false;
 				}
