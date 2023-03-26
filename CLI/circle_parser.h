@@ -1,10 +1,9 @@
 #pragma once
 
-#include <stdbool.h>
 #include "../Shared/structures.h"
+#include <stdbool.h>
 
-typedef struct CircleRequest
-{
+typedef struct CircleRequest {
 	Point left_up;
 	Point right_bottom;
 
@@ -17,8 +16,7 @@ typedef struct CircleRequest
 	char new_file[256];
 
 	int check_sum;
-}
-CircleRequest;
+} CircleRequest;
 
 bool validate_circle(CircleRequest *request);
 int get_circle_type(CircleRequest *request);

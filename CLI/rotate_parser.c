@@ -1,25 +1,25 @@
-#include <string.h>
-#include <getopt.h>
+#include "rotate_parser.h"
 #include "../ExceptionHandler/error_handler.h"
 #include "types_parser.h"
-#include "rotate_parser.h"
+#include <getopt.h>
+#include <string.h>
 
 bool validate_rotate(RotateRequest *request)
 {
 	// validate coordinates
-	if((request->check_sum & 0b11) != 0b11)
+	if(!match_flags(request->check_sum, START_POINT | END_POINT))
 	{
 		log_error(MISSING_ARGUMENT, "--start | --end");
 		return false;
 	}
-	if(request->left_up.x < 0 || request->left_up.x > request->right_bottom.x ||
-	   request->left_up.y < 0 || request->left_up.y > request->right_bottom.y)
+	// TODO may be only square area??
+	if(!validate_area(&request->left_up, &request->right_bottom))
 	{
 		log_error(CONVERSATION_ERROR, "--start | --end");
 		return false;
 	}
 	// check angle
-	if((request->check_sum & 0b100) != 0b100)
+	if(!match_flags(request->check_sum, ANGLE))
 	{
 		log_error(MISSING_ARGUMENT, "--angle");
 		return false;
@@ -39,7 +39,6 @@ bool validate_rotate(RotateRequest *request)
 		log_error(CONVERSATION_ERROR, "--direction");
 		return false;
 	}
-
 	return true;
 }
 
@@ -56,8 +55,7 @@ bool parse_rotate_request(int argc, char *argv[], char *file_name, RotateRequest
 			{"start", required_argument, NULL, 's'},
 			{"end", required_argument, NULL, 'e'},
 			{"new", required_argument, NULL, 'n'},
-			{0, 0, 0, 0}
-		};
+			{0, 0, 0, 0}};
 
 	memset(request, 0, sizeof(RotateRequest));
 
@@ -72,34 +70,35 @@ bool parse_rotate_request(int argc, char *argv[], char *file_name, RotateRequest
 					return false;
 				}
 				request->direction = (!strcmp(optarg, "left") ? LEFT : (!strcmp(optarg, "right") ? RIGHT : INVALID));
-				request->check_sum |= (1 << 3);
+				set_flags(&request->check_sum, DIRECTION);
 				break;
 			case 'a':
 				if(!parse_int(optarg, &request->angle, long_options[operation_index].name, 10))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 2);
+				set_flags(&request->check_sum, ANGLE);
 				break;
 			case 's':
 				if(!parse_point_values(optarg, &request->left_up, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 0);
+				set_flags(&request->check_sum, START_POINT);
 				break;
 			case 'e':
 				if(!parse_point_values(optarg, &request->right_bottom, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 1);
+				set_flags(&request->check_sum, END_POINT);
 				break;
 			case 'n':
 				if(!parse_file_name(optarg, request->new_file, long_options[operation_index].name))
 				{
 					return false;
 				}
+				set_flags(&request->check_sum, NEW);
 				break;
 			case '?':
 				usage(optopt);

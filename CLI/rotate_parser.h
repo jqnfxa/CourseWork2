@@ -1,10 +1,9 @@
 #pragma once
 
-#include <stdbool.h>
 #include "../Shared/structures.h"
+#include <stdbool.h>
 
-typedef struct RotateRequest
-{
+typedef struct RotateRequest {
 	Point left_up;
 	Point right_bottom;
 
@@ -13,8 +12,7 @@ typedef struct RotateRequest
 	char new_file[256];
 
 	int check_sum;
-}
-RotateRequest;
+} RotateRequest;
 
 bool validate_rotate(RotateRequest *request);
 bool parse_rotate_request(int argc, char *argv[], char *file_name, RotateRequest *request);

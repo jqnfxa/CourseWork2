@@ -16,14 +16,13 @@ enum OPERATION_TYPE parse_user_command(int argc, char *argv[])
 	int operation_type = UNDEFINED;
 
 	struct option long_options[] =
-	{
+		{
 			{"rectangle", no_argument, &operation_type, DRAW_RECTANGLE},
 			{"circle", no_argument, &operation_type, DRAW_CIRCLE},
 			{"frame", no_argument, &operation_type, DRAW_FRAME},
 			{"rotate", no_argument, &operation_type, ROTATE_IMAGE},
 			{"help", no_argument, NULL, 'h'},
-			{0, 0, 0, 0}
-	};
+			{0, 0, 0, 0}};
 
 	int operation, operation_index = 0;
 	if((operation = getopt_long(argc, argv, "h", long_options, &operation_index)) != -1)

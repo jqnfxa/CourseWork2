@@ -1,10 +1,9 @@
 #pragma once
 
-#include <stdbool.h>
 #include "../Shared/structures.h"
+#include <stdbool.h>
 
-typedef struct RectangleRequest
-{
+typedef struct RectangleRequest {
 	Point left_up;
 	Point right_bottom;
 
@@ -14,8 +13,7 @@ typedef struct RectangleRequest
 	char new_file[256];
 
 	int check_sum;
-}
-RectangleRequest;
+} RectangleRequest;
 
 bool validate_rectangle(RectangleRequest *request);
 bool parse_rectangle_request(int argc, char *argv[], char *file_name, RectangleRequest *request);

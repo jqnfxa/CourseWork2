@@ -1,12 +1,19 @@
-#include "CLI/cli.h"
-#include "CLI/rectangle_parser.h"
 #include "CLI/circle_parser.h"
+#include "CLI/cli.h"
 #include "CLI/frame_parser.h"
+#include "CLI/rectangle_parser.h"
 #include "CLI/rotate_parser.h"
 #include <stdio.h>
+// #include "Tests/test_cli.h"
 
 int main(int argc, char *argv[])
 {
+	//	test_frame_parser();
+	//	test_rotate_parser();
+	//	test_circle_parser();
+	//	test_rectangle_parser();
+
+	/*
 	char file_to_process[256];
 
 	// TODO library for read/write to .bmp
@@ -73,6 +80,6 @@ int main(int argc, char *argv[])
 		default:
 			printf("--undefined--\n");
 			break;
-	}
+	}*/
 	return 0;
 }

@@ -1,8 +1,8 @@
-#include <getopt.h>
-#include <string.h>
+#include "frame_parser.h"
 #include "../ExceptionHandler/error_handler.h"
 #include "types_parser.h"
-#include "frame_parser.h"
+#include <getopt.h>
+#include <string.h>
 
 bool validate_frame(FrameRequest *request)
 {
@@ -11,13 +11,13 @@ bool validate_frame(FrameRequest *request)
 		return false;
 	}
 	// check type
-	if((request->check_sum & 0b1) != 0b1)
+	if(!match_flags(request->check_sum, FRAME_TYPE))
 	{
 		log_error(MISSING_ARGUMENT, "--type");
 		return false;
 	}
 	// check color
-	if((request->check_sum & 0b10) != 0b10)
+	if(!match_flags(request->check_sum, COLOR))
 	{
 		log_error(MISSING_ARGUMENT, "--color");
 		return false;
@@ -29,7 +29,7 @@ bool validate_frame(FrameRequest *request)
 	}
 
 	// check for width override
-	if((request->check_sum & 0b100) != 0)
+	if(match_flags(request->check_sum, WIDTH))
 	{
 		if(request->width <= 0)
 		{
@@ -57,9 +57,7 @@ bool parse_frame_request(int argc, char *argv[], char *file_name, FrameRequest *
 			{"color", required_argument, NULL, 'c'},
 			{"width", required_argument, NULL, 'w'},
 			{"new", required_argument, NULL, 'n'},
-			{0, 0, 0, 0}
-		};
-
+			{0, 0, 0, 0}};
 
 	memset(request, 0, sizeof(FrameRequest));
 
@@ -73,27 +71,28 @@ bool parse_frame_request(int argc, char *argv[], char *file_name, FrameRequest *
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 0);
+				set_flags(&request->check_sum, FRAME_TYPE);
 				break;
 			case 'c':
 				if(!parse_color(optarg, &request->color, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 1);
+				set_flags(&request->check_sum, COLOR);
 				break;
 			case 'w':
 				if(!parse_int(optarg, &request->width, long_options[operation_index].name, 10))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 2);
+				set_flags(&request->check_sum, WIDTH);
 				break;
 			case 'n':
 				if(!parse_file_name(optarg, request->new_file, long_options[operation_index].name))
 				{
 					return false;
 				}
+				set_flags(&request->check_sum, NEW);
 				break;
 			case '?':
 				usage(optopt);

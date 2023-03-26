@@ -16,12 +16,15 @@ void log_error(enum ERROR error, const char *option)
 		case WRONG_SEQUENCE:
 			fprintf(stderr, "option '%s' can't be called: wrong request type\n", option);
 			break;
+		case AMBIGUOUS_CALL:
+			fprintf(stderr, "option '%s' can't be called: ambiguous call\n", option);
+			break;
 		default:
 			break;
 	}
 }
 
-int __attribute__ ((__noreturn__)) usage(int opt)
+int __attribute__((__noreturn__)) usage(int opt)
 {
 	int error = (opt == '?');
 

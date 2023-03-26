@@ -1,8 +1,8 @@
+#include "rectangle_parser.h"
+#include "../ExceptionHandler/error_handler.h"
+#include "types_parser.h"
 #include <getopt.h>
 #include <string.h>
-#include "types_parser.h"
-#include "../ExceptionHandler/error_handler.h"
-#include "rectangle_parser.h"
 
 bool validate_rectangle(RectangleRequest *request)
 {
@@ -11,20 +11,19 @@ bool validate_rectangle(RectangleRequest *request)
 		return false;
 	}
 	// validate coordinates
-	if((request->check_sum & 0b11) != 0b11)
+	if(!match_flags(request->check_sum, START_POINT | END_POINT))
 	{
 		log_error(MISSING_ARGUMENT, "--start | --end");
 		return false;
 	}
-	if(request->left_up.x < 0 || request->left_up.x > request->right_bottom.x ||
-	   request->left_up.y < 0 || request->left_up.y > request->right_bottom.y)
+	if(!validate_area(&request->left_up, &request->right_bottom))
 	{
 		log_error(CONVERSATION_ERROR, "--start | --end");
 		return false;
 	}
 
 	// validate color
-	if((request->check_sum & (1 << 2)) != (1 << 2))
+	if(!match_flags(request->check_sum, COLOR))
 	{
 		log_error(MISSING_ARGUMENT, "--color");
 		return false;
@@ -36,7 +35,7 @@ bool validate_rectangle(RectangleRequest *request)
 	}
 
 	// check if we have override width
-	if((request->check_sum & (1 << 3)) != 0)
+	if(match_flags(request->check_sum, WIDTH))
 	{
 		if(request->width <= 0)
 		{
@@ -50,7 +49,7 @@ bool validate_rectangle(RectangleRequest *request)
 	}
 
 	// check if we have fill
-	if((request->check_sum & (1 << 4)) != 0)
+	if(match_flags(request->check_sum, FILL))
 	{
 		if(!is_valid_rgb(request->fill_color))
 		{
@@ -76,8 +75,7 @@ bool parse_rectangle_request(int argc, char *argv[], char *file_name, RectangleR
 			{"color", required_argument, NULL, 'c'},
 			{"fill", required_argument, NULL, 'f'},
 			{"new", required_argument, NULL, 'n'},
-			{0, 0, 0, 0}
-		};
+			{0, 0, 0, 0}};
 
 	memset(request, 0, sizeof(RectangleRequest));
 
@@ -91,41 +89,42 @@ bool parse_rectangle_request(int argc, char *argv[], char *file_name, RectangleR
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 0);
+				set_flags(&request->check_sum, START_POINT);
 				break;
 			case 'e':
 				if(!parse_point_values(optarg, &request->right_bottom, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 1);
+				set_flags(&request->check_sum, END_POINT);
 				break;
 			case 'w':
 				if(!parse_int(optarg, &request->width, long_options[operation_index].name, 10))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 3);
+				set_flags(&request->check_sum, WIDTH);
 				break;
 			case 'c':
 				if(!parse_color(optarg, &request->color, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 2);
+				set_flags(&request->check_sum, COLOR);
 				break;
 			case 'f':
 				if(!parse_color(optarg, &request->fill_color, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 4);
+				set_flags(&request->check_sum, FILL);
 				break;
 			case 'n':
 				if(!parse_file_name(optarg, request->new_file, long_options[operation_index].name))
 				{
 					return false;
 				}
+				set_flags(&request->check_sum, NEW);
 				break;
 			case '?':
 				usage(optopt);

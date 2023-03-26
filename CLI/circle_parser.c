@@ -1,8 +1,8 @@
+#include "circle_parser.h"
+#include "../ExceptionHandler/error_handler.h"
+#include "types_parser.h"
 #include <getopt.h>
 #include <string.h>
-#include "types_parser.h"
-#include "../ExceptionHandler/error_handler.h"
-#include "circle_parser.h"
 
 int get_circle_type(CircleRequest *request)
 {
@@ -11,15 +11,32 @@ int get_circle_type(CircleRequest *request)
 		return 0;
 	}
 
-	// first type
-	if((request->check_sum & 0b11) == 0b11 && (request->check_sum & 0b1100000) != 0b1100000)
+	// looking for area
+	if(match_flags(request->check_sum, START_POINT | END_POINT))
 	{
-		return 1;
+		// we got point or radius ?
+		if(match_flags(request->check_sum, POINT) || match_flags(request->check_sum, RADIUS))
+		{
+			log_error(AMBIGUOUS_CALL, "--circle");
+		}
+		else
+		{
+			return 2;
+		}
 	}
-	else if((request->check_sum & 0b11) != 0b11 && (request->check_sum & 0b1100000) == 0b1100000)
+	else
 	{
-		return 2;
+		// we got area ?
+		if(match_flags(request->check_sum, START_POINT) || match_flags(request->check_sum, END_POINT))
+		{
+			log_error(AMBIGUOUS_CALL, "--circle");
+		}
+		else
+		{
+			return 1;
+		}
 	}
+	// invalid type
 	return 0;
 }
 
@@ -44,6 +61,7 @@ bool validate_circle(CircleRequest *request)
 			log_error(CONVERSATION_ERROR, "--radius");
 			return false;
 		}
+		// TODO are you sure we can't send negative center point ?
 		if(request->center.x < 0 || request->center.y < 0)
 		{
 			log_error(CONVERSATION_ERROR, "--center");
@@ -52,8 +70,7 @@ bool validate_circle(CircleRequest *request)
 	}
 	else /* type == 2 */
 	{
-		if(request->left_up.x < 0 || request->left_up.x > request->right_bottom.x ||
-		   request->left_up.y < 0 || request->left_up.y > request->right_bottom.y)
+		if(!is_square_area(&request->left_up, &request->right_bottom))
 		{
 			log_error(CONVERSATION_ERROR, "--start | --end");
 			return false;
@@ -61,7 +78,7 @@ bool validate_circle(CircleRequest *request)
 	}
 
 	// validate color
-	if((request->check_sum & (1 << 2)) != (1 << 2))
+	if(!match_flags(request->check_sum, COLOR))
 	{
 		log_error(MISSING_ARGUMENT, "--color");
 		return false;
@@ -73,7 +90,7 @@ bool validate_circle(CircleRequest *request)
 	}
 
 	// check if we have override width
-	if((request->check_sum & (1 << 3)) != 0)
+	if(match_flags(request->check_sum, WIDTH))
 	{
 		if(request->width <= 0)
 		{
@@ -87,7 +104,7 @@ bool validate_circle(CircleRequest *request)
 	}
 
 	// check if we have fill
-	if((request->check_sum & (1 << 4)) != 0)
+	if(match_flags(request->check_sum, FILL))
 	{
 		if(!is_valid_rgb(request->fill_color))
 		{
@@ -115,8 +132,7 @@ bool parse_circle_request(int argc, char *argv[], char *file_name, CircleRequest
 			{"color", required_argument, NULL, 'c'},
 			{"fill", required_argument, NULL, 'f'},
 			{"new", required_argument, NULL, 'n'},
-			{0, 0, 0, 0}
-		};
+			{0, 0, 0, 0}};
 
 	memset(request, 0, sizeof(CircleRequest));
 
@@ -130,55 +146,56 @@ bool parse_circle_request(int argc, char *argv[], char *file_name, CircleRequest
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 0);
+				set_flags(&request->check_sum, POINT);
 				break;
 			case 'r':
 				if(!parse_int(optarg, &request->radius, long_options[operation_index].name, 10))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 1);
+				set_flags(&request->check_sum, RADIUS);
 				break;
 			case 's':
 				if(!parse_point_values(optarg, &request->left_up, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 5);
+				set_flags(&request->check_sum, START_POINT);
 				break;
 			case 'e':
 				if(!parse_point_values(optarg, &request->right_bottom, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 6);
+				set_flags(&request->check_sum, END_POINT);
 				break;
 			case 'w':
 				if(!parse_int(optarg, &request->width, long_options[operation_index].name, 10))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 3);
+				set_flags(&request->check_sum, WIDTH);
 				break;
 			case 'c':
 				if(!parse_color(optarg, &request->color, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 2);
+				set_flags(&request->check_sum, COLOR);
 				break;
 			case 'f':
 				if(!parse_color(optarg, &request->fill_color, long_options[operation_index].name))
 				{
 					return false;
 				}
-				request->check_sum |= (1 << 4);
+				set_flags(&request->check_sum, FILL);
 				break;
 			case 'n':
 				if(!parse_file_name(optarg, request->new_file, long_options[operation_index].name))
 				{
 					return false;
 				}
+				set_flags(&request->check_sum, NEW);
 				break;
 			case '?':
 				usage(optopt);
