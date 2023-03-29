@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define BMP_INDENTIFIER 0x4d42
 ;
 #pragma pack(push, 1)
 

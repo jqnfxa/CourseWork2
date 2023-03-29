@@ -121,6 +121,24 @@ bool parse_color(const char *argument, int *color, const char *option_name)
 	return parse_int(argument + 1, color, option_name, 16);
 }
 
+bool match_postfix(const char *filename, const char *needle)
+{
+	if(filename == NULL)
+	{
+		return false;
+	}
+
+	if(strlen(filename) < strlen(needle))
+	{
+		return false;
+	}
+
+	// calculate offset to match
+	size_t offset = strlen(filename) - strlen(needle);
+
+	return !strcmp(filename + offset, needle);
+}
+
 bool is_valid_bmp(const char *file_name)
 {
 	if(file_name == NULL)
@@ -132,15 +150,8 @@ bool is_valid_bmp(const char *file_name)
 	{
 		return false;
 	}
-	const char cmp[] = "pmb.";
-	for(int i = 0; i < strlen(cmp); ++i)
-	{
-		if(file_name[file_len - 1 - i] != cmp[i])
-		{
-			return false;
-		}
-	}
-	return true;
+
+	return match_postfix(file_name, ".bmp");
 }
 
 bool is_valid_rgb(int color)

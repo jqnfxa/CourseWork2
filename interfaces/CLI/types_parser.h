@@ -2,6 +2,7 @@
 #include "../Declarations/structures.h"
 #include <stdbool.h>
 
+bool match_postfix(const char *filename, const char *needle);
 bool match_flags(int value, int flags);
 void set_flags(int *value, int flags);
 bool parse_point_values(const char *argument, Point *point, const char *option_name);

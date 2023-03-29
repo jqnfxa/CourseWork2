@@ -22,7 +22,7 @@ BMP *load_image(const char *filename)
 	}
 
 	// check if file prefix is BM
-	if(bmp->header.bfType != 0x4d42)
+	if(bmp->header.bfType != BMP_INDENTIFIER)
 	{
 		goto fail;
 	}
@@ -134,7 +134,7 @@ bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 	char empty_byte = 0;
 
 	// we need to write scan lines
-	for(int i = matrix->height - 1; i >= 0; i--)
+	for(int i = (int)matrix->height - 1; i >= 0; i--)
 	{
 		for(int j = 0; j < matrix->width; ++j)
 		{

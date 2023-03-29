@@ -4,6 +4,8 @@
 #include "interfaces/CLI/frame_parser.h"
 #include "interfaces/CLI/rectangle_parser.h"
 #include "interfaces/CLI/rotate_parser.h"
+#include "interfaces/Utils/rectangle.h"
+#include "interfaces/CLI/types_parser.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])
@@ -18,7 +20,7 @@ int main(int argc, char *argv[])
 	//	test_rectangle_parser();
 
 
-	/*
+
 	char file_to_process[256];
 
 	// TODO functions for drawing, rotating ...
@@ -30,8 +32,20 @@ int main(int argc, char *argv[])
 			RectangleRequest request;
 			if(parse_rectangle_request(argc, argv, file_to_process, &request))
 			{
-				// do something
-				printf("--rectangle valid\n");
+				BMP *a = load_image(file_to_process);
+
+				draw_rectangle(&a->matrix, &request);
+
+				if(match_flags(request.check_sum, NEW))
+				{
+					unload_image(request.new_file, a);
+				}
+				else
+				{
+					unload_image(file_to_process, a);
+				}
+
+				safe_free_bmp(&a);
 			}
 			else
 			{
@@ -84,6 +98,6 @@ int main(int argc, char *argv[])
 		default:
 			printf("--undefined--\n");
 			break;
-	}*/
+	}
 	return 0;
 }
