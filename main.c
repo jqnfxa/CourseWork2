@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 	//	test_circle_parser();
 	//	test_rectangle_parser();
 
+
 	/*
 	char file_to_process[256];
 
