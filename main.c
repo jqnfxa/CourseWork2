@@ -1,14 +1,18 @@
+#include "BmpLib/bmp_parser.h"
 #include "CLI/circle_parser.h"
 #include "CLI/cli.h"
 #include "CLI/frame_parser.h"
 #include "CLI/rectangle_parser.h"
 #include "CLI/rotate_parser.h"
 #include <stdio.h>
-// #include "Tests/test_cli.h"
 
 int main(int argc, char *argv[])
 {
-	//	test_frame_parser();
+	// test_bmp_read();
+	// test_bmp_write();
+	// printf("f %ld s %ld", sizeof(BITMAP_HEADER), sizeof(BITMAP_HEADER1));
+
+	// test_frame_parser();
 	//	test_rotate_parser();
 	//	test_circle_parser();
 	//	test_rectangle_parser();
@@ -16,7 +20,6 @@ int main(int argc, char *argv[])
 	/*
 	char file_to_process[256];
 
-	// TODO library for read/write to .bmp
 	// TODO functions for drawing, rotating ...
 
 	switch(parse_user_command(argc, argv))

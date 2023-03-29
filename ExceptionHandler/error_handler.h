@@ -3,9 +3,10 @@
 
 enum ERROR {
 	MISSING_ARGUMENT = 0,
-	CONVERSATION_ERROR = 1,
-	WRONG_SEQUENCE = 2,
-	AMBIGUOUS_CALL = 3,
+	CONVERSATION_ERROR,
+	WRONG_SEQUENCE,
+	AMBIGUOUS_CALL,
+	OUT_OF_MEMORY
 };
 
 void log_error(enum ERROR error, const char *option);

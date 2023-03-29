@@ -7,6 +7,9 @@ void log_error(enum ERROR error, const char *option)
 {
 	switch(error)
 	{
+		case OUT_OF_MEMORY:
+			fprintf(stderr, "out of memory\n");
+			break;
 		case MISSING_ARGUMENT:
 			fprintf(stderr, "option '%s' missing argument\n", option);
 			break;

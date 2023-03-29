@@ -27,6 +27,13 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 	}
 
 	char *copy = (char *)malloc((strlen(argument) + 1) * sizeof(char));
+
+	if(copy == NULL)
+	{
+		log_error(OUT_OF_MEMORY, option_name);
+		return false;
+	}
+
 	strcpy(copy, argument);
 
 	int parsed[2] = {0, 0};
@@ -42,6 +49,7 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 			return false;
 		}
 	}
+	// TODO may be let input like: 1,2,2,2,... i.e. parse only 2 first values?
 	if(token != NULL || i != 2)
 	{
 		log_error(CONVERSATION_ERROR, option_name);
