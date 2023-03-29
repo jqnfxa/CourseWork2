@@ -1,5 +1,5 @@
 #pragma once
-#include "../Shared/structures.h"
+#include "../Declarations/structures.h"
 #include <stdbool.h>
 
 bool match_flags(int value, int flags);

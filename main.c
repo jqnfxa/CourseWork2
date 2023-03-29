@@ -1,9 +1,9 @@
-#include "BmpLib/bmp_parser.h"
-#include "CLI/circle_parser.h"
-#include "CLI/cli.h"
-#include "CLI/frame_parser.h"
-#include "CLI/rectangle_parser.h"
-#include "CLI/rotate_parser.h"
+#include "interfaces/BMPLib/bmp_parser.h"
+#include "interfaces/CLI/circle_parser.h"
+#include "interfaces/CLI/cli.h"
+#include "interfaces/CLI/frame_parser.h"
+#include "interfaces/CLI/rectangle_parser.h"
+#include "interfaces/CLI/rotate_parser.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])

@@ -2,8 +2,8 @@
 // Created by shard on 3/23/23.
 //
 
-#include "cli.h"
-#include "../ExceptionHandler/error_handler.h"
+#include "../../interfaces/CLI/cli.h"
+#include "../../interfaces/ExceptionHandler/error_handler.h"
 #include <getopt.h>
 #include <string.h>
 

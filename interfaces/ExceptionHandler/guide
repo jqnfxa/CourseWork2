@@ -1,0 +1,65 @@
+program usage: [options] <filename>.bmp
+
+options:
+
+	-h, --help                         print this useful hint
+	
+	--rectangle [options] <filename>.bmp
+	
+		-s, --start x,y                set the upper left corner of rectangle
+		
+		-e, --end x,y                  set the right bottom corner of rectangle 
+		
+		-w, --width pixels             (optional) the line width (1 by default) 
+		
+		-c, --color color              color of lines in hex format [#000000; #FFFFFF]
+		
+		-f, --fill color               (optional) fill color in hex format [#000000; #FFFFFF] (by default there is no fill)
+		
+		-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting 
+		
+		
+	--circle [options] <filename>.bmp 
+	
+	Warning: circle can be specified only with rectangle or with point and radius 
+	[i.e. -s and -e or -p and -r can be used at time]
+	
+		-s, --start x,y                upper left corner of the rectangle into which the circle will be inscribed
+		
+		-e, --end x,y                  the right bottom corner of rectangle into which the circle will be inscribed
+		
+		-p, --point x,y                coordinates of center dot
+		
+		-r, --radius r                 radius of circle
+		
+		-w, --width pixels             (optional) specifies the line width (1 by default) 
+		
+		-c, --color color              specifies color of lines in hex format [#000000; #FFFFFF]
+		
+		-f, --fill color               (optional) specifies fill color in hex format [#000000; #FFFFFF] (by default there is no fill)
+		
+		-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting 
+			
+	
+	--rotate [options] <filename>.bmp 
+	
+		-d, --direction dir            (optional) direction to rotate can be 'left' or 'right' (default is left)
+		
+		-a, --angle angle              rotating angle can be 90 or 180 or 270 degrees
+		
+		-s, --start x,y                set the upper left corner of area
+		
+		-e, --end x,y                  set the right bottom corner of area
+		
+		-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting 
+		
+		
+	--frame [options] <filename>.bmp
+		-t, --type type                specifies frame type (now supported 0 types)
+		
+		-c, --color color              specifies color of frame in hex format [#000000; #FFFFFF]
+		
+		-w, --width pixels             (optional)? specifies the frame width <insert num by default>
+		
+		-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting 
+

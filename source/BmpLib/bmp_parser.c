@@ -1,4 +1,4 @@
-#include "bmp_parser.h"
+#include "../../interfaces/BMPLib/bmp_parser.h"
 #include <stdlib.h>
 
 // TODO more accurate parser

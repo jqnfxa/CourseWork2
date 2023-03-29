@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Shared/structures.h"
+#include "../Declarations/structures.h"
 #include <stdbool.h>
 
 typedef struct RotateRequest {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Shared/structures.h"
+#include "../Declarations/structures.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -52,7 +52,7 @@ typedef struct tagBMP {
 	BITMAPFILEHEADER header;
 	BITMAPINFOHEADER dib_header;
 	Matrix matrix;
-	uint32_t junk_bytes; // value to store junk bytes to alignment
+	uint32_t junk_bytes;// value to store junk bytes to alignment
 } BMP;
 
 #pragma pack(pop)

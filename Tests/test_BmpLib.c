@@ -1,5 +1,5 @@
 #include "test_BmpLib.h"
-#include "../BmpLib/bmp_parser.h"
+#include "../interfaces/BMPLib/bmp_parser.h"
 #include <stdlib.h>
 
 void test_bmp_read()

@@ -1,6 +1,6 @@
-#include "circle_parser.h"
-#include "../ExceptionHandler/error_handler.h"
-#include "types_parser.h"
+#include "../../interfaces/CLI/circle_parser.h"
+#include "../../interfaces/ExceptionHandler/error_handler.h"
+#include "../../interfaces/CLI/types_parser.h"
 #include <getopt.h>
 #include <string.h>
 

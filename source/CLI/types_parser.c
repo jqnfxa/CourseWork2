@@ -1,5 +1,5 @@
-#include "types_parser.h"
-#include "../ExceptionHandler/error_handler.h"
+#include "../../interfaces/CLI/types_parser.h"
+#include "../../interfaces/ExceptionHandler/error_handler.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>

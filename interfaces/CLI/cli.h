@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Shared/structures.h"
+#include "../Declarations/structures.h"
 #include <getopt.h>
 #include <stdbool.h>
 

@@ -1,8 +1,8 @@
 #include "test_cli.h"
-#include "../CLI/circle_parser.h"
-#include "../CLI/frame_parser.h"
-#include "../CLI/rectangle_parser.h"
-#include "../CLI/rotate_parser.h"
+#include "../interfaces/CLI/circle_parser.h"
+#include "../interfaces/CLI/frame_parser.h"
+#include "../interfaces/CLI/rectangle_parser.h"
+#include "../interfaces/CLI/rotate_parser.h"
 #include <getopt.h>
 #include <stdio.h>
 #include <string.h>

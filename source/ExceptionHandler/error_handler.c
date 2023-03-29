@@ -1,5 +1,5 @@
-#include "error_handler.h"
-#include "hint.h"
+#include "../../interfaces/ExceptionHandler/error_handler.h"
+#include "../../interfaces/ExceptionHandler/hint.h"
 #include <stdio.h>
 #include <stdlib.h>
 
