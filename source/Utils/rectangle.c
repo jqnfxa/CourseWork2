@@ -2,9 +2,9 @@
 #include "../../interfaces/CLI/types_parser.h"
 #include "../../interfaces/Utils/matrix.h"
 
-#define max(a, b) (a > b ? a : b)
-#define min(a, b) (a < b ? a : b)
-
+// TODO create tests
+// TODO may be make argument for fill optional and fill with default color?
+// TODO let points be out of range?
 void draw_rectangle(Matrix *matrix, RectangleRequest *info)
 {
 	if(matrix == NULL || info == NULL)
@@ -51,11 +51,12 @@ void draw_rectangle(Matrix *matrix, RectangleRequest *info)
 		return;
 	}
 
-	for(int row = left_up.y; row <= right_bottom.y; ++row)
+	Point pixel;
+	for(pixel.y = left_up.y; pixel.y <= right_bottom.y; ++pixel.y)
 	{
-		for(int column = left_up.x; column <= right_bottom.x; ++column)
+		for(pixel.x = left_up.x; pixel.x <= right_bottom.x; ++pixel.x)
 		{
-			set_pixel(matrix, (Point){column, row}, info->fill_color);
+			set_pixel(matrix, pixel, info->fill_color);
 		}
 	}
 }
@@ -67,9 +68,10 @@ void draw_vertical_line(Matrix *matrix, int y_1, int y_2, int x, int color)
 		return;
 	}
 
-	for(int row = y_1; row < matrix->height && row <= y_2; ++row)
+	Point pixel = {.x = x, .y = y_1};
+	for(; pixel.y < matrix->height && pixel.y <= y_2; ++pixel.y)
 	{
-		set_pixel(matrix, (Point){x, row}, color);
+		set_pixel(matrix, pixel, color);
 	}
 }
 
@@ -80,8 +82,9 @@ void draw_horizontal_line(Matrix *matrix, int x_1, int x_2, int y, int color)
 		return;
 	}
 
-	for(int column = x_1; column < matrix->width && column <= x_2; ++column)
+	Point pixel = {.x = x_1, .y = y};
+	for(; pixel.x < matrix->width && pixel.x <= x_2; ++pixel.x)
 	{
-		set_pixel(matrix, (Point){column, y}, color);
+		set_pixel(matrix, pixel, color);
 	}
 }

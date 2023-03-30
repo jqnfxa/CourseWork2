@@ -114,6 +114,7 @@ bool parse_color(const char *argument, int *color, const char *option_name)
 	{
 		return false;
 	}
+
 	if(*argument != '#')
 	{
 		return false;

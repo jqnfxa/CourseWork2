@@ -3,6 +3,7 @@
 #include "../../interfaces/CLI/types_parser.h"
 #include <getopt.h>
 #include <string.h>
+#include <stdio.h>
 
 bool validate_rectangle(RectangleRequest *request)
 {
@@ -127,6 +128,7 @@ bool parse_rectangle_request(int argc, char *argv[], char *file_name, RectangleR
 				set_flags(&request->check_sum, NEW);
 				break;
 			case '?':
+				fprintf(stderr, "unknown is: %s\n", optarg);
 				usage(optopt);
 			default:
 				break;

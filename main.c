@@ -6,6 +6,7 @@
 #include "interfaces/CLI/rotate_parser.h"
 #include "interfaces/Utils/rectangle.h"
 #include "interfaces/CLI/types_parser.h"
+#include "interfaces/Utils/circle.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])
@@ -18,8 +19,6 @@ int main(int argc, char *argv[])
 	//	test_rotate_parser();
 	//	test_circle_parser();
 	//	test_rectangle_parser();
-
-
 
 	char file_to_process[256];
 
@@ -34,22 +33,29 @@ int main(int argc, char *argv[])
 			{
 				BMP *a = load_image(file_to_process);
 
-				draw_rectangle(&a->matrix, &request);
-
-				if(match_flags(request.check_sum, NEW))
+				if(a != NULL)
 				{
-					unload_image(request.new_file, a);
+					draw_rectangle(&a->matrix, &request);
+
+					if(match_flags(request.check_sum, NEW))
+					{
+						unload_image(request.new_file, a);
+					}
+					else
+					{
+						unload_image(file_to_process, a);
+					}
+
+					safe_free_bmp(&a);
 				}
 				else
 				{
-					unload_image(file_to_process, a);
+					fprintf(stderr, "output file not found\n");
 				}
-
-				safe_free_bmp(&a);
 			}
 			else
 			{
-				printf("--rectangle invalid\n");
+				fprintf(stderr, "--rectangle invalid\n");
 			}
 			break;
 		}
@@ -72,12 +78,31 @@ int main(int argc, char *argv[])
 			CircleRequest request;
 			if(parse_circle_request(argc, argv, file_to_process, &request))
 			{
-				// do something
-				printf("--circle valid\n");
+				BMP *a = load_image(file_to_process);
+
+				if(a != NULL)
+				{
+					draw_circle(&a->matrix, &request);
+
+					if(match_flags(request.check_sum, NEW))
+					{
+						unload_image(request.new_file, a);
+					}
+					else
+					{
+						unload_image(file_to_process, a);
+					}
+
+					safe_free_bmp(&a);
+				}
+				else
+				{
+					fprintf(stderr, "output file not found\n");
+				}
 			}
 			else
 			{
-				printf("--circle invalid\n");
+				fprintf(stderr, "--circle invalid\n");
 			}
 			break;
 		}

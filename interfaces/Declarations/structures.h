@@ -14,6 +14,9 @@
 #define DIRECTION   (1 << 9)
 #define FRAME_TYPE  (1 << 10)
 
+#define min(a, b) (a < b ? a : b)
+#define max(a, b) (a > b ? a : b)
+
 enum OPERATION_TYPE {
 	UNDEFINED = -1,
 	DRAW_RECTANGLE,

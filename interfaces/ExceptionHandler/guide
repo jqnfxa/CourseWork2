@@ -12,10 +12,12 @@ options:
 		
 		-w, --width pixels             (optional) the line width (1 by default) 
 		
-		-c, --color color              color of lines in hex format [#000000; #FFFFFF]
+		-c, --color color              color of lines in hex format; color from [#000000; #FFFFFF]
+		                               example: --color "#FF00FF" (note: use "" to get correct input)
 		
-		-f, --fill color               (optional) fill color in hex format [#000000; #FFFFFF] (by default there is no fill)
-		
+		-f, --fill color               (optional) fill color in hex format; color from [#000000; #FFFFFF]
+                                        example: --fill "#FF00FF" (note: use "" to get correct input)
+
 		-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting 
 		
 		
@@ -34,10 +36,12 @@ options:
 		
 		-w, --width pixels             (optional) specifies the line width (1 by default) 
 		
-		-c, --color color              specifies color of lines in hex format [#000000; #FFFFFF]
-		
-		-f, --fill color               (optional) specifies fill color in hex format [#000000; #FFFFFF] (by default there is no fill)
-		
+		-c, --color color              color of lines in hex format; color from [#000000; #FFFFFF]
+        		                       example: --color "#FF00FF" (note: use "" to get correct input)
+
+        -f, --fill color               (optional) fill color in hex format; color from [#000000; #FFFFFF]
+                                        example: --fill "#FF00FF" (note: use "" to get correct input)
+
 		-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting 
 			
 	
@@ -57,9 +61,9 @@ options:
 	--frame [options] <filename>.bmp
 		-t, --type type                specifies frame type (now supported 0 types)
 		
-		-c, --color color              specifies color of frame in hex format [#000000; #FFFFFF]
+		-c, --color color              color of lines in hex format; color from [#000000; #FFFFFF]
+                		               example: --color "#FF00FF" (note: use "" to get correct input)
 		
 		-w, --width pixels             (optional)? specifies the frame width <insert num by default>
 		
-		-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting 
-
+		-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting
