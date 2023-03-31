@@ -1,4 +1,5 @@
 #include "../../interfaces/BMPLib/bmp_parser.h"
+#include "../../interfaces/Geometry/matrix.h"
 #include <stdlib.h>
 
 // TODO more accurate parser
@@ -62,16 +63,6 @@ BMP *load_image(const char *filename)
 	bmp->matrix.height = bmp->dib_header.biHeight;
 	read_pixel_matrix(file, &bmp->matrix, bmp->junk_bytes);
 
-	/*
-	for(int i = 0; i < bmp->dib_header.biHeight; ++i)
-	{
-		for(int j = 0; j < bmp->dib_header.biWidth; ++j)
-		{
-			printf("color #%x ", bmp->matrix.grid[i][j]);
-		}
-		printf("\n");
-	}*/
-
 	fclose(file);
 	return bmp;
 fail:
@@ -87,12 +78,7 @@ bool read_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 		return false;
 	}
 
-	matrix->grid = (int32_t **)calloc(matrix->height, sizeof(int32_t *));
-
-	for(size_t i = 0; i < matrix->height; ++i)
-	{
-		matrix->grid[i] = (int32_t *)calloc(matrix->width, sizeof(int32_t));
-	}
+	*matrix = create(matrix->height, matrix->width);
 
 	RGB pixel;
 
@@ -107,7 +93,7 @@ bool read_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 			}
 			else
 			{
-				free_matrix(matrix);
+				destroy(matrix);
 				return false;
 			}
 		}
@@ -190,28 +176,13 @@ fail:
 	return false;
 }
 
-void free_matrix(Matrix *matrix)
-{
-	if(matrix == NULL)
-	{
-		return;
-	}
-	for(size_t i = 0; i < matrix->height; ++i)
-	{
-		free(matrix->grid[i]);
-	}
-	free(matrix->grid);
-	matrix->grid = 0;
-	matrix->height = matrix->width = 0;
-}
-
 void free_bmp(BMP *ptr)
 {
 	if(ptr == NULL)
 	{
 		return;
 	}
-	free_matrix(&ptr->matrix);
+	destroy(&ptr->matrix);
 }
 
 void safe_free_bmp(BMP **ptr)

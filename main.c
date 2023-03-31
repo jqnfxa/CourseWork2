@@ -7,6 +7,7 @@
 #include "interfaces/Utils/rectangle.h"
 #include "interfaces/CLI/types_parser.h"
 #include "interfaces/Utils/circle.h"
+#include "interfaces/Utils/rotate.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])
@@ -111,7 +112,27 @@ int main(int argc, char *argv[])
 			RotateRequest request;
 			if(parse_rotate_request(argc, argv, file_to_process, &request))
 			{
-				printf("--rotate valid\n");
+				BMP *a = load_image(file_to_process);
+
+				if(a != NULL)
+				{
+					rotate_area(&a->matrix, &request);
+
+					if(match_flags(request.check_sum, NEW))
+					{
+						unload_image(request.new_file, a);
+					}
+					else
+					{
+						unload_image(file_to_process, a);
+					}
+
+					safe_free_bmp(&a);
+				}
+				else
+				{
+					fprintf(stderr, "output file not found\n");
+				}
 			}
 			else
 			{

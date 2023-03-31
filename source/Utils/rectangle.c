@@ -1,6 +1,6 @@
 #include "../../interfaces/Utils/rectangle.h"
 #include "../../interfaces/CLI/types_parser.h"
-#include "../../interfaces/Utils/matrix.h"
+#include "../../interfaces/Geometry/matrix.h"
 
 // TODO create tests
 // TODO may be make argument for fill optional and fill with default color?

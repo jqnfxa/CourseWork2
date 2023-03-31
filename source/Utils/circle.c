@@ -1,6 +1,6 @@
 #include "../../interfaces/Utils/circle.h"
-#include "../../interfaces/Utils/matrix.h"
 #include "../../interfaces/CLI/types_parser.h"
+#include "../../interfaces/Geometry/matrix.h"
 
 // TODO tests
 void draw_circle(Matrix *matrix, CircleRequest *info)
@@ -24,6 +24,7 @@ void draw_circle(Matrix *matrix, CircleRequest *info)
 
 	draw_circle_v1(matrix, info->center, info->radius, info->radius - info->width, info->color);
 
+	// check if we need to fill inner area
 	if(match_flags(info->check_sum, FILL) && info->width < info->radius)
 	{
 		draw_circle_v1(matrix, info->center, info->radius - info->width, 0, info->fill_color);
@@ -66,7 +67,7 @@ void draw_circle_v1(Matrix *matrix, Point center, int outer, int inner, int colo
 	int x0 = outer;
 	int xi = inner;
 	int y = 0;
-	int erro = 1 -x0;
+	int erro = 1 - x0;
 	int erri = 1 - xi;
 
 	while(x0 >= y)

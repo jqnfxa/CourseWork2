@@ -62,7 +62,6 @@ BMP *load_image(const char *filename);
 bool read_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment);
 bool unload_image(const char *filename, BMP *picture);
 
-void free_matrix(Matrix *matrix);
 void free_bmp(BMP *ptr);
 void safe_free_bmp(BMP **ptr);
 

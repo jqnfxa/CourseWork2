@@ -12,7 +12,6 @@ bool validate_rotate(RotateRequest *request)
 		log_error(MISSING_ARGUMENT, "--start | --end");
 		return false;
 	}
-	// TODO may be only square area??
 	if(!validate_area(&request->left_up, &request->right_bottom))
 	{
 		log_error(CONVERSATION_ERROR, "--start | --end");
