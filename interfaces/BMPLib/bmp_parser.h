@@ -22,9 +22,9 @@ typedef struct tagBITMAPFILEHEADER {
 #pragma pack(push, 1)
 
 typedef struct tagBITMAPINFOHEADER {
-	uint32_t biSize;
-	uint32_t biWidth;
-	uint32_t biHeight;
+	int32_t biSize;
+	int32_t biWidth;
+	int32_t biHeight;
 	uint16_t biPlanes;
 	uint16_t biBitCount;
 	uint32_t biCompression;
@@ -59,6 +59,7 @@ typedef struct tagBMP {
 #pragma pack(pop)
 
 BMP *load_image(const char *filename);
+BMP *create_image(int width, int height, int color);
 bool read_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment);
 bool unload_image(const char *filename, BMP *picture);
 

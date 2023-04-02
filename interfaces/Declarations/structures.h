@@ -39,6 +39,6 @@ typedef struct Point {
 typedef struct Matrix
 {
 	int32_t **grid;
-	size_t height;
-	size_t width;
+	int height;
+	int width;
 } Matrix;

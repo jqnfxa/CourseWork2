@@ -9,21 +9,18 @@
 #include "interfaces/Utils/circle.h"
 #include "interfaces/Utils/rotate.h"
 #include <stdio.h>
+#include <time.h>
 
 int main(int argc, char *argv[])
 {
-	// test_bmp_read();
-	// test_bmp_write();
-	// printf("f %ld s %ld", sizeof(BITMAP_HEADER), sizeof(BITMAP_HEADER1));
-
-	// test_frame_parser();
-	//	test_rotate_parser();
-	//	test_circle_parser();
-	//	test_rectangle_parser();
-
+	/*
+	 *
+	 * clock_t time;
+	 * time = clock();
+	 * fprintf(stderr, "Time used: %f ms\n", (clock() - time) / 1000.0);
+	 *
+	 */
 	char file_to_process[256];
-
-	// TODO functions for drawing, rotating ...
 
 	switch(parse_user_command(argc, argv))
 	{
@@ -56,7 +53,7 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				fprintf(stderr, "--rectangle invalid\n");
+				fprintf(stderr, "--rectangle request invalid\n");
 			}
 			break;
 		}
@@ -70,7 +67,7 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				printf("--frame invalid\n");
+				printf("--frame request invalid\n");
 			}
 			break;
 		}
@@ -83,7 +80,10 @@ int main(int argc, char *argv[])
 
 				if(a != NULL)
 				{
+					clock_t time;
+					time = clock();
 					draw_circle(&a->matrix, &request);
+					fprintf(stderr, "Time used: %f ms\n", (clock() - time) / 1000.0);
 
 					if(match_flags(request.check_sum, NEW))
 					{
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				fprintf(stderr, "--circle invalid\n");
+				fprintf(stderr, "--circle request invalid\n");
 			}
 			break;
 		}
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				printf("--rotate invalid\n");
+				printf("--rotate request invalid\n");
 			}
 			break;
 		}

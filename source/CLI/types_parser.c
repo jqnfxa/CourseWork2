@@ -49,7 +49,7 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 			return false;
 		}
 	}
-	// TODO may be let input like: 1,2,2,2,... i.e. parse only 2 first values?
+	//TODO may be let input like: 1,2,2,2,... i.e. parse only 2 first values?
 	if(token != NULL || i != 2)
 	{
 		log_error(CONVERSATION_ERROR, option_name);
@@ -170,7 +170,7 @@ bool validate_area(Point *left_up, Point *right_bottom)
 	{
 		return false;
 	}
-	if(left_up->x < 0 || left_up->y < 0 || left_up->x > right_bottom->x || left_up->y > right_bottom->y)
+	if(left_up->x > right_bottom->x || left_up->y > right_bottom->y)
 	{
 		return false;
 	}
@@ -186,4 +186,29 @@ bool is_square_area(Point *left_up, Point *right_bottom)
 	}
 
 	return (right_bottom->x - left_up->x) == (right_bottom->y - left_up->y);
+}
+
+bool is_out_of_bounds(int w, int h, Point left_up, Point right_bottom)
+{
+	return (right_bottom.x < 0 || right_bottom.y < 0 || left_up.x >= w || left_up.y >= h);
+}
+
+void normalise_coordinates(int w, int h, Point *left_up, Point *right_bottom)
+{
+	if(left_up->x < 0)
+	{
+		left_up->x = 0;
+	}
+	if(left_up->y < 0)
+	{
+		left_up->y = 0;
+	}
+	if(right_bottom->x >= w)
+	{
+		right_bottom->x = w - 1;
+	}
+	if(right_bottom->y >= h)
+	{
+		right_bottom->y = h - 1;
+	}
 }

@@ -71,6 +71,50 @@ fail:
 	return NULL;
 }
 
+BMP *create_image(int width, int height, int color)
+{
+	BMP *image = malloc(sizeof(BMP));
+
+	if(image == NULL)
+	{
+		return image;
+	}
+
+	int closest;
+	for(closest = width * 3; closest % 4 != 0; ++closest){}
+
+	image->junk_bytes = closest - width * 3;
+	image->header.bfType = BMP_INDENTIFIER;
+	image->header.bfSize = image->junk_bytes * height + 3 * width * height + 54;
+	image->header.bfReserved1 = 0;
+	image->header.bfReserved2 = 0;
+	image->header.bfOffBits = 54;
+
+	image->dib_header.biSize = 40;
+	image->dib_header.biWidth = width;
+	image->dib_header.biHeight = height;
+	image->dib_header.biPlanes = 1;
+	image->dib_header.biBitCount = 24;
+	image->dib_header.biCompression = 0;
+	image->dib_header.biSizeImage = image->header.bfSize - image->header.bfOffBits;
+	image->dib_header.biXPelsPerMeter = 2835;
+	image->dib_header.biYPelsPerMeter = 2835;
+	image->dib_header.biClrUsed = 0;
+	image->dib_header.biClrImportant = 0;
+
+	image->matrix = create(height, width);
+
+	for(int i = 0; i < image->matrix.height; ++i)
+	{
+		for(int j = 0; j < image->matrix.width; ++j)
+		{
+			set_pixel(&image->matrix, (Point){i, j}, color);
+		}
+	}
+
+	return image;
+}
+
 bool read_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 {
 	if(file == NULL || matrix == NULL)

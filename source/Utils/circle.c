@@ -2,7 +2,7 @@
 #include "../../interfaces/CLI/types_parser.h"
 #include "../../interfaces/Geometry/matrix.h"
 
-// TODO tests
+//TODO small circle ( < 9*9) precision
 void draw_circle(Matrix *matrix, CircleRequest *info)
 {
 	if(matrix == NULL || info == NULL)
@@ -15,6 +15,19 @@ void draw_circle(Matrix *matrix, CircleRequest *info)
 		info->radius = (info->right_bottom.x - info->left_up.x) / 2;
 		info->center.x = info->left_up.x + (info->right_bottom.x - info->left_up.x) / 2;
 		info->center.y = info->left_up.y + (info->right_bottom.y - info->left_up.y) / 2;
+	}
+	else
+	{
+		info->left_up.x = info->center.x - info->radius;
+		info->left_up.y = info->center.y - info->radius;
+		info->right_bottom.x = info->center.x + info->radius;
+		info->right_bottom.y = info->center.y + info->radius;
+	}
+
+	// nothing to draw
+	if(is_out_of_bounds(matrix->width, matrix->height, info->left_up, info->right_bottom))
+	{
+		return;
 	}
 
 	if(info->width >= info->radius)
@@ -37,10 +50,11 @@ void xLine(Matrix *matrix, int x1, int x2, int y, int color)
 	{
 		return;
 	}
-	while(x1 <= x2)
+	Point pixel = {x1, y};
+	while(pixel.x <= x2)
 	{
-		set_pixel(matrix, (Point){x1, y}, color);
-		++x1;
+		set_pixel(matrix, pixel, color);
+		++pixel.x;
 	}
 }
 
@@ -50,10 +64,11 @@ void yLine(Matrix *matrix, int x, int y1, int y2, int color)
 	{
 		return;
 	}
-	while(y1 <= y2)
+	Point pixel = {x, y1};
+	while(pixel.y <= y2)
 	{
-		set_pixel(matrix, (Point){x, y1}, color);
-		++y1;
+		set_pixel(matrix, pixel, color);
+		++pixel.y;
 	}
 }
 
@@ -92,7 +107,6 @@ void draw_circle_v1(Matrix *matrix, Point center, int outer, int inner, int colo
 			x0--;
 			erro += 2 * (y - x0 + 1);
 		}
-
 		if(y > inner)
 		{
 			xi = y;

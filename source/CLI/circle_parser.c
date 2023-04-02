@@ -46,35 +46,29 @@ bool validate_circle(CircleRequest *request)
 	{
 		return false;
 	}
-	int type = get_circle_type(request);
 
-	if(type == 0)
+	switch(get_circle_type(request))
 	{
-		log_error(MISSING_ARGUMENT, "--circle");
-		return false;
-	}
-	// radius + center
-	else if(type == 1)
-	{
-		if(request->radius <= 0)
-		{
-			log_error(CONVERSATION_ERROR, "--radius");
-			return false;
+		case 1: {
+			if(request->radius <= 0)
+			{
+				log_error(CONVERSATION_ERROR, "--radius");
+				return false;
+			}
 		}
-		// TODO are you sure we can't send negative center point ?
-		if(request->center.x < 0 || request->center.y < 0)
-		{
-			log_error(CONVERSATION_ERROR, "--center");
-			return false;
+		break;
+		case 2:{
+			if(!is_square_area(&request->left_up, &request->right_bottom))
+			{
+				log_error(CONVERSATION_ERROR, "--start | --end");
+				return false;
+			}
 		}
-	}
-	else /* type == 2 */
-	{
-		if(!is_square_area(&request->left_up, &request->right_bottom))
-		{
-			log_error(CONVERSATION_ERROR, "--start | --end");
+		break;
+		case 0:
+		default:
+			log_error(MISSING_ARGUMENT, "--circle");
 			return false;
-		}
 	}
 
 	// validate color

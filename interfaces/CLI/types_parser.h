@@ -13,3 +13,5 @@ bool is_valid_bmp(const char *file_name);
 bool is_valid_rgb(int color);
 bool validate_area(Point *left_up, Point *right_bottom);
 bool is_square_area(Point *left_up, Point *right_bottom);
+bool is_out_of_bounds(int w, int h, Point left_up, Point right_bottom);
+void normalise_coordinates(int w, int h, Point *left_up, Point *right_bottom);
