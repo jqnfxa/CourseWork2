@@ -38,7 +38,7 @@ Matrix create(size_t n, size_t m)
 
 		if(matrix.grid[i] == NULL)
 		{
-			matrix.height = (i == 0 ? 0 : i - 1);
+			matrix.height = (int)(i == 0 ? 0 : i - 1);
 			destroy(&matrix);
 			return (Matrix){};
 		}
@@ -48,9 +48,7 @@ Matrix create(size_t n, size_t m)
 
 Matrix crop(Matrix *matrix, Point left_up, Point right_bottom)
 {
-	if(matrix == NULL ||
-	   left_up.x > right_bottom.x ||
-	   left_up.y > right_bottom.y ||
+	if(matrix == NULL || !validate_area(&left_up, &right_bottom) ||
 	   left_up.x >= (int)matrix->width || left_up.y >= (int)matrix->height)
 	{
 		return (Matrix){};

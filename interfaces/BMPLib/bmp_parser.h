@@ -58,6 +58,7 @@ typedef struct tagBMP {
 
 #pragma pack(pop)
 
+// I/O
 BMP *load_image(const char *filename);
 BMP *create_image(int width, int height, int color);
 bool read_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment);

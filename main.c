@@ -80,10 +80,7 @@ int main(int argc, char *argv[])
 
 				if(a != NULL)
 				{
-					clock_t time;
-					time = clock();
 					draw_circle(&a->matrix, &request);
-					fprintf(stderr, "Time used: %f ms\n", (clock() - time) / 1000.0);
 
 					if(match_flags(request.check_sum, NEW))
 					{
