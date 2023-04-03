@@ -1,13 +1,9 @@
-#include "interfaces/BMPLib/bmp_parser.h"
-#include "interfaces/CLI/circle_parser.h"
-#include "interfaces/CLI/cli.h"
-#include "interfaces/CLI/frame_parser.h"
-#include "interfaces/CLI/rectangle_parser.h"
-#include "interfaces/CLI/rotate_parser.h"
-#include "interfaces/Utils/rectangle.h"
-#include "interfaces/CLI/types_parser.h"
-#include "interfaces/Utils/circle.h"
-#include "interfaces/Utils/rotate.h"
+#include "BmpLib/bmp_parser.h"
+#include "CLI/command_parser.h"
+#include "Draw/circle.h"
+#include "Draw/rectangle.h"
+#include "Draw/rotate.h"
+#include "Validator/validator.h"
 #include <stdio.h>
 #include <time.h>
 
@@ -24,20 +20,19 @@ int main(int argc, char *argv[])
 
 	switch(parse_user_command(argc, argv))
 	{
-		case DRAW_RECTANGLE:
-		{
-			RectangleRequest request;
-			if(parse_rectangle_request(argc, argv, file_to_process, &request))
+		case DRAW_RECTANGLE: {
+			RectangleQuery query;
+			if(parse_rectangle_query(argc, argv, file_to_process, &query))
 			{
 				BMP *a = load_image(file_to_process);
 
 				if(a != NULL)
 				{
-					draw_rectangle(&a->matrix, &request);
+					draw_rectangle(&a->matrix, &query);
 
-					if(match_flags(request.check_sum, NEW))
+					if(match_flags(query.check_sum, NEW))
 					{
-						unload_image(request.new_file, a);
+						unload_image(query.new_file, a);
 					}
 					else
 					{
@@ -57,10 +52,9 @@ int main(int argc, char *argv[])
 			}
 			break;
 		}
-		case DRAW_FRAME:
-		{
-			FrameRequest request;
-			if(parse_frame_request(argc, argv, file_to_process, &request))
+		case DRAW_FRAME: {
+			FrameQuery query;
+			if(parse_frame_query(argc, argv, file_to_process, &query))
 			{
 				// do something
 				printf("--frame valid\n");
@@ -71,20 +65,19 @@ int main(int argc, char *argv[])
 			}
 			break;
 		}
-		case DRAW_CIRCLE:
-		{
-			CircleRequest request;
-			if(parse_circle_request(argc, argv, file_to_process, &request))
+		case DRAW_CIRCLE: {
+			CircleQuery query;
+			if(parse_circle_query(argc, argv, file_to_process, &query))
 			{
 				BMP *a = load_image(file_to_process);
 
 				if(a != NULL)
 				{
-					draw_circle(&a->matrix, &request);
+					draw_circle(&a->matrix, &query);
 
-					if(match_flags(request.check_sum, NEW))
+					if(match_flags(query.check_sum, NEW))
 					{
-						unload_image(request.new_file, a);
+						unload_image(query.new_file, a);
 					}
 					else
 					{
@@ -104,20 +97,19 @@ int main(int argc, char *argv[])
 			}
 			break;
 		}
-		case ROTATE_IMAGE:
-		{
-			RotateRequest request;
-			if(parse_rotate_request(argc, argv, file_to_process, &request))
+		case ROTATE_IMAGE: {
+			RotateQuery query;
+			if(parse_rotate_query(argc, argv, file_to_process, &query))
 			{
 				BMP *a = load_image(file_to_process);
 
 				if(a != NULL)
 				{
-					rotate_area(&a->matrix, &request);
+					rotate_area(&a->matrix, &query);
 
-					if(match_flags(request.check_sum, NEW))
+					if(match_flags(query.check_sum, NEW))
 					{
-						unload_image(request.new_file, a);
+						unload_image(query.new_file, a);
 					}
 					else
 					{

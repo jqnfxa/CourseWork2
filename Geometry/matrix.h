@@ -1,16 +1,15 @@
 #pragma once
 
+#include "structures.h"
 #include <stdbool.h>
 
-void swap(int32_t *lhs, int32_t *rhs);
-Matrix create(size_t n, size_t m);
-Matrix crop(Matrix *matrix, Point left_up, Point right_bottom);
-void paste(Matrix *dst, Matrix *src, Point left_up);
+Matrix create(int32_t rows, int32_t columns);
 void destroy(Matrix *matrix);
-void set_pixel(Matrix *matrix, Point pixel, int color);
-bool is_in_bound(Matrix *matrix, Point position);
+
 Matrix transpose(Matrix *matrix);
 Matrix rotate_left(Matrix matrix);
 Matrix rotate_right(Matrix matrix);
 void flip_horizontal(Matrix *matrix);
 void flip_vertical(Matrix *matrix);
+
+void swap(int32_t *lhs, int32_t *rhs);
