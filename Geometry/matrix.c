@@ -9,9 +9,7 @@ Matrix create(int32_t rows, int32_t columns)
 		return (Matrix){};
 	}
 
-	Matrix matrix = {.height = rows,
-					 .width = columns,
-					 .grid = (int32_t **)malloc(sizeof(int32_t *) * matrix.height)};
+	Matrix matrix = {.height = rows, .width = columns, .grid = (int32_t **)malloc(sizeof(int32_t *) * matrix.height)};
 
 	if(matrix.grid == NULL)
 	{
