@@ -30,7 +30,9 @@ Matrix crop(Matrix *matrix, Area *area)
 
 void paste(Matrix *dst, Matrix *src, Point *left_up)
 {
-	if(dst == NULL || src == NULL || left_up == NULL || left_up->x >= dst->width || left_up->y >= dst->height || left_up->y + src->height < 0 || left_up->x + src->width < 0)
+	if(dst == NULL || src == NULL || left_up == NULL ||
+	   left_up->x >= dst->width || left_up->y >= dst->height ||
+	   left_up->y + src->height < 0 || left_up->x + src->width < 0)
 	{
 		return;
 	}
