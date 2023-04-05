@@ -12,7 +12,8 @@ const char *error_messages[] = {
 	"Failed to validate query: too few arguments",
 	"Failed to validate query: invalid input",
 	"Failed to validate query: missing argument",
-	"Failed to convert"
+	"Failed to convert",
+	"Failed to validate query: ambiguous call"
 };
 
 void log_error(enum ERROR_CODE code, const char *extra_data)

@@ -1,4 +1,5 @@
 #include "validator.h"
+#include "../ExceptionHandler/logger.h"
 #include <stddef.h>
 #include <string.h>
 
@@ -148,24 +149,24 @@ bool validate_rectangle(RectangleQuery *query)
 	// validate coordinates
 	if(!match_flags(query->check_sum, START_POINT | END_POINT))
 	{
-		//TODO log_error(MISSING_ARGUMENT, "--start | --end");
+		log_error(MISSING_ARGUMENT, "--start | --end");
 		return false;
 	}
 	if(!validate_area(&query->area))
 	{
-		//TODO log_error(CONVERSATION_ERROR, "--start | --end");
+		log_error(CONVERSATION, "invalid area --start | --end");
 		return false;
 	}
 
 	// validate color
 	if(!match_flags(query->check_sum, COLOR))
 	{
-		//TODO log_error(MISSING_ARGUMENT, "--color");
+		log_error(MISSING_ARGUMENT, "--color");
 		return false;
 	}
 	if(!is_valid_rgb(query->color))
 	{
-		//TODO log_error(CONVERSATION_ERROR, "--color");
+		log_error(CONVERSATION, "--color");
 		return false;
 	}
 
@@ -174,7 +175,7 @@ bool validate_rectangle(RectangleQuery *query)
 	{
 		if(query->width <= 0)
 		{
-			//TODO log_error(CONVERSATION_ERROR, "--width");
+			log_error(CONVERSATION, "--width");
 			return false;
 		}
 	}
@@ -188,7 +189,7 @@ bool validate_rectangle(RectangleQuery *query)
 	{
 		if(!is_valid_rgb(query->fill_color))
 		{
-			//TODO log_error(CONVERSATION_ERROR, "--fill");
+			log_error(CONVERSATION, "--fill");
 			return false;
 		}
 	}
@@ -208,7 +209,7 @@ int16_t get_circle_type(CircleQuery *request)
 		// we got point or radius ?
 		if(match_flags(request->check_sum, POINT) || match_flags(request->check_sum, RADIUS))
 		{
-			//TODO log_error(AMBIGUOUS_CALL, "--circle");
+			log_error(AMBIGUOUS_CALL, "--circle");
 		}
 		else
 		{
@@ -220,7 +221,7 @@ int16_t get_circle_type(CircleQuery *request)
 		// we got area ?
 		if(match_flags(request->check_sum, START_POINT) || match_flags(request->check_sum, END_POINT))
 		{
-			//TODO log_error(AMBIGUOUS_CALL, "--circle");
+			log_error(AMBIGUOUS_CALL, "--circle");
 		}
 		else
 		{
@@ -243,7 +244,7 @@ bool validate_circle(CircleQuery *query)
 		case 1: {
 			if(query->radius <= 0)
 			{
-				//TODO log_error(CONVERSATION_ERROR, "--radius");
+				log_error(CONVERSATION, "--radius");
 				return false;
 			}
 		}
@@ -251,26 +252,26 @@ bool validate_circle(CircleQuery *query)
 		case 2: {
 			if(!is_square_area(&query->area))
 			{
-				//TODO log_error(CONVERSATION_ERROR, "--start | --end");
+				log_error(CONVERSATION, "--start | --end");
 				return false;
 			}
 		}
 		break;
 		case 0:
 		default:
-			//TODO log_error(MISSING_ARGUMENT, "--circle");
+			log_error(MISSING_ARGUMENT, "--circle");
 			return false;
 	}
 
 	// validate color
 	if(!match_flags(query->check_sum, COLOR))
 	{
-		//TODO log_error(MISSING_ARGUMENT, "--color");
+		log_error(MISSING_ARGUMENT, "--color");
 		return false;
 	}
 	if(!is_valid_rgb(query->color))
 	{
-		//TODO log_error(CONVERSATION_ERROR, "--color");
+		log_error(CONVERSATION, "--color");
 		return false;
 	}
 
@@ -279,7 +280,7 @@ bool validate_circle(CircleQuery *query)
 	{
 		if(query->width <= 0)
 		{
-			//TODO log_error(CONVERSATION_ERROR, "--width");
+			log_error(CONVERSATION, "--width");
 			return false;
 		}
 	}
@@ -293,7 +294,7 @@ bool validate_circle(CircleQuery *query)
 	{
 		if(!is_valid_rgb(query->fill_color))
 		{
-			//TODO log_error(CONVERSATION_ERROR, "--fill");
+			log_error(CONVERSATION, "--fill");
 			return false;
 		}
 	}
@@ -310,18 +311,18 @@ bool validate_frame(FrameQuery *query)
 	// check type
 	if(!match_flags(query->check_sum, FRAME_TYPE))
 	{
-		//TODO log_error(MISSING_ARGUMENT, "--type");
+		log_error(MISSING_ARGUMENT, "--type");
 		return false;
 	}
 	// check color
 	if(!match_flags(query->check_sum, COLOR))
 	{
-		//TODO log_error(MISSING_ARGUMENT, "--color");
+		log_error(MISSING_ARGUMENT, "--color");
 		return false;
 	}
 	if(!is_valid_rgb(query->color))
 	{
-		//TODO log_error(CONVERSATION_ERROR, "--color");
+		log_error(CONVERSATION, "--color");
 		return false;
 	}
 
@@ -330,7 +331,7 @@ bool validate_frame(FrameQuery *query)
 	{
 		if(query->width <= 0)
 		{
-			//TODO log_error(CONVERSATION_ERROR, "--width");
+			log_error(CONVERSATION, "--width");
 			return false;
 		}
 	}
@@ -351,25 +352,25 @@ bool validate_rotate(RotateQuery *query)
 	// validate coordinates
 	if(!match_flags(query->check_sum, START_POINT | END_POINT))
 	{
-		//TODO log_error(MISSING_ARGUMENT, "--start | --end");
+		log_error(MISSING_ARGUMENT, "--start | --end");
 		return false;
 	}
 	if(!validate_area(&query->area))
 	{
-		//TODO log_error(CONVERSATION_ERROR, "--start | --end");
+		log_error(CONVERSATION, "--start | --end");
 		return false;
 	}
 	// check angle
 	if(!match_flags(query->check_sum, ANGLE))
 	{
-		//TODO log_error(MISSING_ARGUMENT, "--angle");
+		log_error(MISSING_ARGUMENT, "--angle");
 		return false;
 	}
 	else
 	{
 		if(query->angle != 90 && query->angle != 180 && query->angle != 270)
 		{
-			//TODO log_error(CONVERSATION_ERROR, "--angle");
+			log_error(CONVERSATION, "--angle must be 90 | 180 | 270");
 			return false;
 		}
 	}
@@ -377,7 +378,7 @@ bool validate_rotate(RotateQuery *query)
 	// check direction
 	if(query->direction == INVALID)
 	{
-		//TODO log_error(CONVERSATION_ERROR, "--direction");
+		log_error(CONVERSATION, "--direction");
 		return false;
 	}
 	return true;
