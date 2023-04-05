@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include "../ExceptionHandler/logger.h"
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -13,6 +14,7 @@ Matrix create(int32_t rows, int32_t columns)
 
 	if(matrix.grid == NULL)
 	{
+		log_error(OUT_OF_MEMORY, "create matrix");
 		return (Matrix){};
 	}
 	for(int32_t i = 0; i < matrix.height; ++i)
@@ -21,6 +23,7 @@ Matrix create(int32_t rows, int32_t columns)
 
 		if(matrix.grid[i] == NULL)
 		{
+			log_error(OUT_OF_MEMORY, "create matrix");
 			matrix.height = (i == 0 ? 0 : i - 1);
 			destroy(&matrix);
 			return (Matrix){};

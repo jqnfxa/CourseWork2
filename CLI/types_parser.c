@@ -1,5 +1,6 @@
 #include "types_parser.h"
 #include "../Validator/validator.h"
+#include "../ExceptionHandler/logger.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,7 +9,7 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 {
 	if(argument == NULL)
 	{
-		//TODO log_error(MISSING_ARGUMENT, option_name);
+		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
 
@@ -16,7 +17,7 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 
 	if(copy == NULL)
 	{
-		//TODO log_error(OUT_OF_MEMORY, option_name);
+		log_error(OUT_OF_MEMORY, option_name);
 		return false;
 	}
 
@@ -38,7 +39,7 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 	//TODO may be let input like: 1,2,2,2,... i.e. parse only 2 first values?
 	if(token != NULL || i != 2)
 	{
-		//TODO log_error(CONVERSATION_ERROR, option_name);
+		log_error(CONVERSATION, option_name);
 
 		free(copy);
 		return false;
@@ -59,14 +60,14 @@ bool parse_int(const char *argument, int *val, const char *option_name, int base
 	}
 	if(argument == NULL)
 	{
-		//TODO log_error(MISSING_ARGUMENT, option_name);
+		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
 	*val = (int)strtol(argument, NULL, base);
 
 	if(errno == EINVAL || errno == ERANGE)
 	{
-		//TODO log_error(CONVERSATION_ERROR, option_name);
+		log_error(CONVERSATION, option_name);
 		return false;
 	}
 
@@ -81,12 +82,12 @@ bool parse_file_name(const char *argument, char *name, const char *option_name)
 	}
 	if(argument == NULL)
 	{
-		//TODO log_error(MISSING_ARGUMENT, option_name);
+		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
 	if(!is_valid_bmp(argument))
 	{
-		//TODO log_error(CONVERSATION_ERROR, "--new");
+		log_error(CONVERSATION, "--new");
 		return false;
 	}
 
@@ -96,14 +97,11 @@ bool parse_file_name(const char *argument, char *name, const char *option_name)
 
 bool parse_color(const char *argument, int *color, const char *option_name)
 {
-	if(argument == NULL)
+	if(argument == NULL || *argument != '#')
 	{
+		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
 
-	if(*argument != '#')
-	{
-		return false;
-	}
 	return parse_int(argument + 1, color, option_name, 16);
 }

@@ -1,8 +1,35 @@
-#include "handler.h"
+#include "logger.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-//TODO accurate error handler
+const char *error_messages[] = {
+	"Failed to open file",
+	"Failed to read file",
+	"Failed to write in file",
+	"Failed to process file: file is not bmp or damaged",
+	"Failed to process file: unsupported type",
+	"The program has run out of memory",
+	"Failed to validate query: too few arguments",
+	"Failed to validate query: invalid input",
+	"Failed to validate query: missing argument",
+	"Failed to convert"
+};
+
+void log_error(enum ERROR_CODE code, const char *extra_data)
+{
+#ifndef debug
+	return;
+#endif
+	if(extra_data != NULL)
+	{
+		fprintf(stderr, "%s %s\n", error_messages[code], extra_data);
+	}
+	else
+	{
+		fprintf(stderr, "%s\n", error_messages[code]);
+	}
+}
+
 // function terminates program
 int __attribute__((__noreturn__)) print_usage(int opt)
 {

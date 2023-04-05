@@ -1,4 +1,5 @@
 #include "image.h"
+#include "../ExceptionHandler/logger.h"
 #include "../Validator/validator.h"
 #include <stddef.h>
 
@@ -15,6 +16,7 @@ Matrix crop(Matrix *matrix, Area *area)
 
 	if(sub.grid == NULL)
 	{
+		log_error(OUT_OF_MEMORY, "create crop");
 		return sub;
 	}
 

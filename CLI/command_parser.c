@@ -1,5 +1,5 @@
 #include "command_parser.h"
-#include "../ExceptionHandler/handler.h"
+#include "../ExceptionHandler/logger.h"
 #include <stddef.h>
 
 enum OPERATION_TYPE parse_user_command(int32_t argc, char *argv[])

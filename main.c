@@ -5,10 +5,12 @@
 #include "Draw/rotate.h"
 #include "Validator/validator.h"
 #include <stdio.h>
-#include <time.h>
 
 int main(int argc, char *argv[])
 {
+	/*BMP *bmp = create_image(4, 4, 0x0);
+	unload_image("tiny.bmp", bmp);
+	safe_free_bmp(&bmp);*/
 	/*
 	 *
 	 * clock_t time;

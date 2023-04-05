@@ -1,4 +1,4 @@
-#include "../ExceptionHandler/handler.h"
+#include "../ExceptionHandler/logger.h"
 #include "../Validator/validator.h"
 #include "command_parser.h"
 #include "types_parser.h"
@@ -80,10 +80,12 @@ bool parse_rectangle_query(int32_t argc, char *argv[], char *file_name, Rectangl
 
 	if(optind >= argc || !is_valid_bmp(argv[optind]))
 	{
+		log_error(TOO_FEW_ARGUMENTS, " for rectangle");
 		return false;
 	}
 	if(!validate_rectangle(query))
 	{
+		log_error(INPUT_INVALID, " for rectangle");
 		return false;
 	}
 

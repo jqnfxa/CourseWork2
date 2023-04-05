@@ -1,8 +1,8 @@
 #include "bmp_parser.h"
 #include "../Draw/image.h"
+#include "../ExceptionHandler/logger.h"
 #include <stdlib.h>
 
-// TODO more accurate parser
 BMP *load_image(const char *filename)
 {
 	// open file to read
@@ -11,6 +11,7 @@ BMP *load_image(const char *filename)
 	// failed to open file
 	if(file == NULL)
 	{
+		log_error(FILE_OPEN, filename);
 		return NULL;
 	}
 
@@ -19,25 +20,30 @@ BMP *load_image(const char *filename)
 	// read BITMAPFILEHEADER
 	if(!safe_fread((void *)&bmp->header, sizeof(bmp->header), 1, file))
 	{
+		log_error(FILE_READ, filename);
 		goto fail;
 	}
 
 	// check if file prefix is BM
 	if(bmp->header.bfType != BMP_INDENTIFIER)
 	{
+		log_error(FILE_INVALID, filename);
 		goto fail;
 	}
 
 	// read file info header
 	if(!safe_fread((void *)&bmp->dib_header, sizeof(bmp->dib_header), 1, file))
 	{
+		log_error(FILE_READ, filename);
 		goto fail;
 	}
 
 	// check the bitmap info. If it is not 24-bit, and uncompressed return false
-	if(bmp->dib_header.biSize != 40 || bmp->dib_header.biBitCount != 24 || bmp->dib_header.biCompression != 0 || (bmp->dib_header.biClrUsed != 0 && bmp->dib_header.biClrImportant != 0))
+	if(bmp->dib_header.biSize != 40 || bmp->dib_header.biBitCount != 24 ||
+	   bmp->dib_header.biCompression != 0 ||
+	   (bmp->dib_header.biClrUsed != 0 && bmp->dib_header.biClrImportant != 0))
 	{
-		// log error ("UNSUPPORTED bmp type")
+		log_error(UNSUPPORTED_TYPE, filename);
 		goto fail;
 	}
 
@@ -55,11 +61,7 @@ BMP *load_image(const char *filename)
 	bmp->junk_bytes = (alignment == 0 ? 0 : alignment / bmp->dib_header.biHeight);
 
 	// read pixel matrix
-	read_pixel_matrix(file,
-					  bmp->dib_header.biWidth,
-					  bmp->dib_header.biHeight,
-					  &bmp->matrix,
-					  bmp->junk_bytes);
+	read_pixel_matrix(file,bmp->dib_header.biWidth,bmp->dib_header.biHeight, &bmp->matrix,bmp->junk_bytes);
 
 	fclose(file);
 	return bmp;
@@ -75,6 +77,7 @@ BMP *create_image(int width, int height, int color)
 
 	if(image == NULL)
 	{
+		log_error(OUT_OF_MEMORY, "create_image");
 		return image;
 	}
 
@@ -127,6 +130,7 @@ bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix
 
 	if(matrix->grid == NULL)
 	{
+		log_error(OUT_OF_MEMORY, "read_pixel_matrix");
 		return false;
 	}
 
@@ -143,17 +147,14 @@ bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix
 			}
 			else
 			{
+				log_error(FILE_INVALID, NULL);
 				destroy(matrix);
 				return false;
 			}
 		}
 
-		// When one scan line is completed
-		// We need to skip the junk bytes
-		if(alignment != 0)
-		{
-			fseek(file, alignment, SEEK_CUR);
-		}
+		// When scan line is completed we need to skip the junk bytes
+		fseek(file, alignment, SEEK_CUR);
 	}
 
 	return true;
@@ -177,6 +178,7 @@ bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 			pixel = int_to_rgb(matrix->grid[i][j]);
 			if(!fwrite(&pixel, sizeof(RGB), 1, file))
 			{
+				log_error(FILE_WRITE, NULL);
 				return false;
 			}
 		}
@@ -202,19 +204,23 @@ bool unload_image(const char *filename, BMP *picture)
 
 	if(output == NULL)
 	{
+		log_error(FILE_OPEN, filename);
 		return false;
 	}
 
 	if(!fwrite(&picture->header, sizeof(BITMAPFILEHEADER), 1, output))
 	{
+		log_error(FILE_WRITE, "header");
 		goto fail;
 	}
 	if(!fwrite(&picture->dib_header, sizeof(BITMAPINFOHEADER), 1, output))
 	{
+		log_error(FILE_WRITE, "dib header");
 		goto fail;
 	}
 	if(!write_pixel_matrix(output, &picture->matrix, picture->junk_bytes))
 	{
+		log_error(FILE_WRITE, "pixel matrix");
 		goto fail;
 	}
 
