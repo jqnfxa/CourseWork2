@@ -4,12 +4,13 @@
 #include "Draw/rectangle.h"
 #include "Draw/rotate.h"
 #include "Validator/validator.h"
+#include "Draw/frame.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])
 {
-	/*BMP *bmp = create_image(4, 4, 0x0);
-	unload_image("tiny.bmp", bmp);
+	/*BMP *bmp = create_image(11, 11, 0xffff0F);
+	unload_image("tiny11*11.bmp", bmp);
 	safe_free_bmp(&bmp);*/
 	/*
 	 *
@@ -58,8 +59,27 @@ int main(int argc, char *argv[])
 			FrameQuery query;
 			if(parse_frame_query(argc, argv, file_to_process, &query))
 			{
-				// do something
-				printf("--frame valid\n");
+				BMP *a = load_image(file_to_process);
+
+				if(a != NULL)
+				{
+					complete_frame_query(&a->matrix, &query);
+					resize_image(a);
+
+					if(match_flags(query.check_sum, NEW))
+					{
+						unload_image(query.new_file, a);
+					}
+					else
+					{
+						unload_image(file_to_process, a);
+					}
+					safe_free_bmp(&a);
+				}
+				else
+				{
+					fprintf(stderr, "output file not found\n");
+				}
 			}
 			else
 			{

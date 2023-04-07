@@ -49,13 +49,13 @@ void shrink_to_fit(int32_t width, int32_t height, Area *area)
 	{
 		area->left_up.y = 0;
 	}
-	if(area->left_up.x > width)
+	if(area->right_bottom.x > width)
 	{
-		area->left_up.x = width;
+		area->right_bottom.x = width;
 	}
-	if(area->left_up.y > height)
+	if(area->right_bottom.y > height)
 	{
-		area->left_up.y = height;
+		area->right_bottom.y = height;
 	}
 }
 
@@ -314,6 +314,11 @@ bool validate_frame(FrameQuery *query)
 		log_error(MISSING_ARGUMENT, "--type");
 		return false;
 	}
+	if(query->type <= 0 || query->type > FRAME_TYPES_SUPPORTED)
+	{
+		log_error(INPUT_INVALID, " frame index incorrect");
+		return false;
+	}
 	// check color
 	if(!match_flags(query->check_sum, COLOR))
 	{
@@ -329,7 +334,7 @@ bool validate_frame(FrameQuery *query)
 	// check for width override
 	if(match_flags(query->check_sum, WIDTH))
 	{
-		if(query->width <= 0)
+		if(query->width <= 0 || query->width > 3000)
 		{
 			log_error(CONVERSATION, "--width");
 			return false;

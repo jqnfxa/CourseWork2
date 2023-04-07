@@ -12,8 +12,7 @@ void rotate_area(Matrix *matrix, RotateQuery *info)
 	if(info->angle == 180)
 	{
 		Matrix sub = crop(matrix, &info->area);
-		flip_horizontal(&sub);
-		flip_vertical(&sub);
+		rotate_180(&sub);
 		paste(matrix, &sub, &info->area.left_up);
 		destroy(&sub);
 	}

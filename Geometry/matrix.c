@@ -10,7 +10,8 @@ Matrix create(int32_t rows, int32_t columns)
 		return (Matrix){};
 	}
 
-	Matrix matrix = {.height = rows, .width = columns, .grid = (int32_t **)malloc(sizeof(int32_t *) * matrix.height)};
+	Matrix matrix = {.height = rows, .width = columns};
+	matrix.grid = (int32_t **)malloc(sizeof(int32_t *) * matrix.height);
 
 	if(matrix.grid == NULL)
 	{
@@ -80,6 +81,16 @@ Matrix rotate_right(Matrix matrix)
 	Matrix result = transpose(&matrix);
 	flip_vertical(&result);
 	return result;
+}
+
+void rotate_180(Matrix *matrix)
+{
+	if(matrix == NULL)
+	{
+		return;
+	}
+	flip_horizontal(matrix);
+	flip_vertical(matrix);
 }
 
 void flip_horizontal(Matrix *matrix)

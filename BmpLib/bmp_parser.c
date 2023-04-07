@@ -39,7 +39,7 @@ BMP *load_image(const char *filename)
 	}
 
 	// check the bitmap info. If it is not 24-bit, and uncompressed return false
-	if(bmp->dib_header.biSize != 40 || bmp->dib_header.biBitCount != 24 ||
+	if(bmp->dib_header.biBitCount != 24 ||
 	   bmp->dib_header.biCompression != 0 ||
 	   (bmp->dib_header.biClrUsed != 0 && bmp->dib_header.biClrImportant != 0))
 	{
@@ -191,6 +191,36 @@ bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 	}
 
 	return true;
+}
+
+void resize_image(BMP *image)
+{
+	if(image == NULL || image->matrix.grid == NULL)
+	{
+		return;
+	}
+
+	int closest;
+	for(closest = image->matrix.width * 3; closest % 4 != 0; ++closest) {}
+
+	image->junk_bytes = closest - image->matrix.width * 3;
+	image->header.bfType = BMP_INDENTIFIER;
+	image->header.bfSize = image->junk_bytes * image->matrix.height + 3 * image->matrix.width * image->matrix.height + 54;
+	image->header.bfReserved1 = 0;
+	image->header.bfReserved2 = 0;
+	image->header.bfOffBits = 54;
+
+	image->dib_header.biSize = 40;
+	image->dib_header.biWidth = image->matrix.width;
+	image->dib_header.biHeight = image->matrix.height;
+	image->dib_header.biPlanes = 1;
+	image->dib_header.biBitCount = 24;
+	image->dib_header.biCompression = 0;
+	image->dib_header.biSizeImage = image->header.bfSize - image->header.bfOffBits;
+	image->dib_header.biXPelsPerMeter = 2835;
+	image->dib_header.biYPelsPerMeter = 2835;
+	image->dib_header.biClrUsed = 0;
+	image->dib_header.biClrImportant = 0;
 }
 
 bool unload_image(const char *filename, BMP *picture)

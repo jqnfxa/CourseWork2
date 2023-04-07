@@ -13,6 +13,7 @@
 #define ANGLE (1 << 8)
 #define DIRECTION (1 << 9)
 #define FRAME_TYPE (1 << 10)
+#define FRAME_TYPES_SUPPORTED 2
 
 enum OPERATION_TYPE {
 	UNDEFINED = -1,

@@ -70,6 +70,17 @@ int32_t rgb_to_int(RGB *color)
 	return (color->r << 16) | (color->g << 8) | (color->b);
 }
 
+int32_t invert_color(int32_t color)
+{
+	int new_color = 0;
+
+	new_color |= (255 - (color >> 16 & 0xff)) << 16;
+	new_color |= (255 - (color >> 8 & 0xff)) << 8;
+	new_color |= (255 - (color & 0xff));
+	return new_color;
+}
+
+
 RGB int_to_rgb(int32_t color)
 {
 	return (RGB){.r = color >> 16 & 0xff, .g = color >> 8 & 0xff, .b = color & 0xff};

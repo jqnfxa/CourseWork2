@@ -17,6 +17,7 @@ typedef struct tagBMP {
 BMP *load_image(const char *filename);
 BMP *create_image(int32_t width, int32_t height, int32_t color);
 bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix, uint32_t alignment);
+void resize_image(BMP *image);
 bool unload_image(const char *filename, BMP *picture);
 
 void free_bmp(BMP *ptr);
