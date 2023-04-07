@@ -109,7 +109,7 @@ void gen_simple_circles(Matrix **src, int frame_width, int color)
 		}
 	}
 
-	int radius = (*src)->height / 32 + 1;
+	int radius = (*src)->height / 35 + 1;
 
 	CircleQuery query;
 	query.radius = radius;
