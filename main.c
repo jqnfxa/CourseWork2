@@ -1,228 +1,40 @@
 #include "BmpLib/bmp_parser.h"
 #include "CLI/command_parser.h"
-#include "Draw/Shapes/polygon.h"
-#include "Draw/Shapes/circle.h"
-#include "Draw/Shapes/rectangle.h"
-#include "Draw/rotate.h"
-#include "Validator/validator.h"
-#include "Draw/frame.h"
 #include <stdio.h>
-#include <time.h>
+#include <stdlib.h>
 
 int main(int argc, char *argv[])
 {
-	/*BMP *bmp = create_image(11, 11, 0xffff0F);
-	unload_image("tiny11*11.bmp", bmp);
-	safe_free_bmp(&bmp);*/
-	/*
-	 *
-	 * clock_t time;
-	 * time = clock();
-	 * fprintf(stderr, "Time used: %f ms\n", (clock() - time) / 1000.0);
-	 *
-	 */
 	char file_to_process[256];
 
-	switch(parse_user_command(argc, argv))
+	enum OPERATION_TYPE query_idx = parse_user_command(argc, argv);
+
+	void *query = get_query_structure(query_idx);
+
+	if(QueryFunctions[query_idx](argc, argv, file_to_process, query))
 	{
-		case DRAW_RECTANGLE: {
-			RectangleQuery query;
-			if(parse_rectangle_query(argc, argv, file_to_process, &query))
-			{
-				BMP *a = load_image(file_to_process);
+		BMP *image = load_image(file_to_process);
 
-				if(a != NULL)
-				{
-					draw_rectangle(&a->matrix, &query);
+		if(image != NULL)
+		{
+			TaskFunctions[query_idx](&image->matrix, query);
 
-					if(match_flags(query.check_sum, NEW))
-					{
-						unload_image(query.new_file, a);
-					}
-					else
-					{
-						unload_image(file_to_process, a);
-					}
+			(void)get_file_to_unload(query_idx, query, file_to_process);
 
-					safe_free_bmp(&a);
-				}
-				else
-				{
-					fprintf(stderr, "output file not found\n");
-				}
-			}
-			else
-			{
-				fprintf(stderr, "--rectangle request invalid\n");
-			}
-			break;
+			unload_image(file_to_process, image);
+
+			safe_free_bmp(&image);
 		}
-		case DRAW_FRAME: {
-			FrameQuery query;
-			if(parse_frame_query(argc, argv, file_to_process, &query))
-			{
-				BMP *a = load_image(file_to_process);
-
-				if(a != NULL)
-				{
-					complete_frame_query(&a->matrix, &query);
-					resize_image(a);
-
-					if(match_flags(query.check_sum, NEW))
-					{
-						unload_image(query.new_file, a);
-					}
-					else
-					{
-						unload_image(file_to_process, a);
-					}
-					safe_free_bmp(&a);
-				}
-				else
-				{
-					fprintf(stderr, "output file not found\n");
-				}
-			}
-			else
-			{
-				printf("--frame request invalid\n");
-			}
-			break;
+		else
+		{
+			fprintf(stderr, "output file not found\n");
 		}
-		case DRAW_CIRCLE: {
-			CircleQuery query;
-			if(parse_circle_query(argc, argv, file_to_process, &query))
-			{
-				BMP *a = load_image(file_to_process);
-
-				if(a != NULL)
-				{
-					clock_t start = clock();
-					draw_circle(&a->matrix, &query);
-					printf("Time used: %f\n", 1.0 * (clock() - start) / CLOCKS_PER_SEC);
-
-					if(match_flags(query.check_sum, NEW))
-					{
-						unload_image(query.new_file, a);
-					}
-					else
-					{
-						unload_image(file_to_process, a);
-					}
-
-					safe_free_bmp(&a);
-				}
-				else
-				{
-					fprintf(stderr, "output file not found\n");
-				}
-			}
-			else
-			{
-				fprintf(stderr, "--circle request invalid\n");
-			}
-			break;
-		}
-		case DRAW_LINE: {
-			LineQuery query;
-			if(parse_line_query(argc, argv, file_to_process, &query))
-			{
-				BMP *a = load_image(file_to_process);
-
-				if(a != NULL)
-				{
-					draw_line(&a->matrix, &query);
-
-					if(match_flags(query.check_sum, NEW))
-					{
-						unload_image(query.new_file, a);
-					}
-					else
-					{
-						unload_image(file_to_process, a);
-					}
-
-					safe_free_bmp(&a);
-				}
-				else
-				{
-					fprintf(stderr, "output file not found\n");
-				}
-			}
-			else
-			{
-				fprintf(stderr, "--line request invalid\n");
-			}
-			break;
-		}
-		case DRAW_POLYGON: {
-			PolygonQuery query;
-			if(parse_polygon_query(argc, argv, file_to_process, &query))
-			{
-				BMP *a = load_image(file_to_process);
-
-				if(a != NULL)
-				{
-					draw_polygon(&a->matrix, &query);
-
-					if(match_flags(query.check_sum, NEW))
-					{
-						unload_image(query.new_file, a);
-					}
-					else
-					{
-						unload_image(file_to_process, a);
-					}
-
-					safe_free_bmp(&a);
-				}
-				else
-				{
-					fprintf(stderr, "output file not found\n");
-				}
-			}
-			else
-			{
-				fprintf(stderr, "--polygon request invalid\n");
-			}
-			break;
-		}
-		case ROTATE_IMAGE: {
-			RotateQuery query;
-			if(parse_rotate_query(argc, argv, file_to_process, &query))
-			{
-				BMP *a = load_image(file_to_process);
-
-				if(a != NULL)
-				{
-					rotate_area(&a->matrix, &query);
-
-					if(match_flags(query.check_sum, NEW))
-					{
-						unload_image(query.new_file, a);
-					}
-					else
-					{
-						unload_image(file_to_process, a);
-					}
-
-					safe_free_bmp(&a);
-				}
-				else
-				{
-					fprintf(stderr, "output file not found\n");
-				}
-			}
-			else
-			{
-				printf("--rotate request invalid\n");
-			}
-			break;
-		}
-		case UNDEFINED:
-		default:
-			printf("--undefined--\n");
-			break;
 	}
+	else
+	{
+		fprintf(stderr, "query is invalid\n");
+	}
+
+	free(query);
 	return 0;
 }

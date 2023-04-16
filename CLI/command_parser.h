@@ -4,6 +4,11 @@
 #include <getopt.h>
 #include <stdbool.h>
 
+extern bool (*QueryFunctions[6])(int32_t argc, char *argv[], char *file_name, void *query);
+extern bool (*TaskFunctions[6])(Matrix *matrix, void *query);
+
+void *get_query_structure(int32_t idx);
+void get_file_to_unload(int32_t query_idx, void *query, char *file_name);
 
 enum OPERATION_TYPE parse_user_command(int32_t argc, char *argv[]);
 bool parse_rectangle_query(int32_t argc, char *argv[], char *file_name, RectangleQuery *query);
