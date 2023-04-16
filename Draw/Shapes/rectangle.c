@@ -42,7 +42,7 @@ void draw_rectangle(Matrix *matrix, RectangleQuery *info)
 	// left
 	draw_filled_rectangle(matrix, &drawing_area, info->color);
 
-	drawing_area.left_up = (Point){info->area.right_bottom.x - info->width, info->area.left_up.x + info->width},
+	drawing_area.left_up = (Point){info->area.right_bottom.x - info->width, info->area.left_up.y + info->width},
 	drawing_area.right_bottom = (Point){info->area.right_bottom.x, info->area.right_bottom.y - info->width};
 
 	// right

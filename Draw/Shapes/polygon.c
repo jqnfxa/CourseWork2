@@ -5,7 +5,7 @@
 #include <string.h>
 
 /*
- * private atributes
+ * private attributes
  */
 #define round_up(f) ((int)((double)(f) >= 0.0 ? floor((double)(f) + 0.5) : -floor(fabs((double)f) + 0.5)))
 #define round_down(f) ((int)((double)(f) >= 0.0 ? ceil((double)(f) - 0.5) : -ceil(fabs((double)f) - 0.5)))
@@ -69,7 +69,6 @@ void draw_polygon(Matrix *matrix, PolygonQuery *info)
 			int avoid_color = invert_color(info->color);
 			draw_elementary_polygon(&new_image, info->points_count, info->points, avoid_color, 1, 1, -1);
 
-			//TODO are you sure?
 			int width = info->width * 2 - 1;
 
 			draw_elementary_polygon(&new_image, info->points_count, info->points, info->color, 0, width, 0x0);

@@ -3,6 +3,8 @@
 #include "../ExceptionHandler/logger.h"
 #include <stdlib.h>
 
+//TODO fix image processing
+
 BMP *load_image(const char *filename)
 {
 	// open file to read

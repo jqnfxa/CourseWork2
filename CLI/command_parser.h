@@ -7,6 +7,7 @@
 extern bool (*QueryFunctions[6])(int32_t argc, char *argv[], char *file_name, void *query);
 extern bool (*TaskFunctions[6])(Matrix *matrix, void *query);
 
+void free_query(int32_t query_idx, void *query);
 void *get_query_structure(int32_t idx);
 void get_file_to_unload(int32_t query_idx, void *query, char *file_name);
 

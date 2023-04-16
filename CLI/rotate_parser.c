@@ -4,6 +4,7 @@
 #include "types_parser.h"
 #include <stddef.h>
 #include <string.h>
+#include <stdlib.h>
 
 bool parse_rotate_query(int32_t argc, char *argv[], char *file_name, RotateQuery *query)
 {
@@ -19,8 +20,6 @@ bool parse_rotate_query(int32_t argc, char *argv[], char *file_name, RotateQuery
 			{"end", required_argument, NULL, 'e'},
 			{"new", required_argument, NULL, 'n'},
 			{0, 0, 0, 0}};
-
-	memset(query, 0, sizeof(RotateQuery));
 
 	int operation, operation_index = 0;
 	while((operation = getopt_long(argc, argv, "d:a:s:e:n:", long_options, &operation_index)) != -1)
@@ -64,6 +63,7 @@ bool parse_rotate_query(int32_t argc, char *argv[], char *file_name, RotateQuery
 				set_flags(&query->check_sum, NEW);
 				break;
 			case '?':
+				free_query(ROTATE_IMAGE, query);
 				print_usage(optopt);
 			default:
 				break;

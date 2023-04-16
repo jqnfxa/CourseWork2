@@ -5,6 +5,7 @@
 #include <getopt.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdlib.h>
 
 bool parse_rectangle_query(int32_t argc, char *argv[], char *file_name, RectangleQuery *query)
 {
@@ -21,8 +22,6 @@ bool parse_rectangle_query(int32_t argc, char *argv[], char *file_name, Rectangl
 			{"fill", required_argument, NULL, 'f'},
 			{"new", required_argument, NULL, 'n'},
 			{0, 0, 0, 0}};
-
-	memset(query, 0, sizeof(RectangleQuery));
 
 	int operation, operation_index = 0;
 	while((operation = getopt_long(argc, argv, "s:e:w:c:f:n:", long_options, &operation_index)) != -1)
@@ -72,6 +71,7 @@ bool parse_rectangle_query(int32_t argc, char *argv[], char *file_name, Rectangl
 				set_flags(&query->check_sum, NEW);
 				break;
 			case '?':
+				free_query(DRAW_RECTANGLE, query);
 				print_usage(optopt);
 			default:
 				break;

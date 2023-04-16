@@ -4,6 +4,7 @@
 #include "types_parser.h"
 #include <getopt.h>
 #include <string.h>
+#include <stdlib.h>
 
 bool parse_circle_query(int32_t argc, char *argv[], char *file_name, CircleQuery *query)
 {
@@ -22,8 +23,6 @@ bool parse_circle_query(int32_t argc, char *argv[], char *file_name, CircleQuery
 			{"fill", required_argument, NULL, 'f'},
 			{"new", required_argument, NULL, 'n'},
 			{0, 0, 0, 0}};
-
-	memset(query, 0, sizeof(CircleQuery));
 
 	int operation, operation_index = 0;
 	while((operation = getopt_long(argc, argv, "p:r:s:e:w:c:f:n:", long_options, &operation_index)) != -1)
@@ -87,6 +86,7 @@ bool parse_circle_query(int32_t argc, char *argv[], char *file_name, CircleQuery
 				set_flags(&query->check_sum, NEW);
 				break;
 			case '?':
+				free_query(DRAW_CIRCLE, query);
 				print_usage(optopt);
 			default:
 				break;

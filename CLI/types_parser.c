@@ -151,6 +151,7 @@ bool parse_points(const char *argument, int32_t **arr, int32_t *count, const cha
 			if(tmp == NULL)
 			{
 				free(*arr);
+				*arr = NULL;
 				free(copy);
 				return false;
 			}
@@ -160,6 +161,8 @@ bool parse_points(const char *argument, int32_t **arr, int32_t *count, const cha
 		if(!parse_int(token, *arr + *count, option_name, 10))
 		{
 			free(copy);
+			free(*arr);
+			*arr = NULL;
 			return false;
 		}
 	}
@@ -168,6 +171,7 @@ bool parse_points(const char *argument, int32_t **arr, int32_t *count, const cha
 		log_error(CONVERSATION, option_name);
 
 		free(*arr);
+		*arr = NULL;
 		free(copy);
 		return false;
 	}
@@ -178,6 +182,7 @@ bool parse_points(const char *argument, int32_t **arr, int32_t *count, const cha
 		log_error(TOO_FEW_ARGUMENTS, "to form polygon");
 
 		free(*arr);
+		*arr = NULL;
 		free(copy);
 		return false;
 	}

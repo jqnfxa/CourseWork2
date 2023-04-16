@@ -28,14 +28,15 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
+			//TODO log_error instead
 			fprintf(stderr, "output file not found\n");
 		}
 	}
 	else
 	{
+		//TODO log_error instead
 		fprintf(stderr, "query is invalid\n");
 	}
-
-	free(query);
+	free_query(query_idx, query);
 	return 0;
 }

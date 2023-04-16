@@ -27,6 +27,15 @@ bool (*TaskFunctions[6])(Matrix *matrix, void *query) = {
 	(bool (*)(Matrix *, void *))draw_polygon,
 	(bool (*)(Matrix *, void *))rotate_area};
 
+void free_query(int32_t query_idx, void *query)
+{
+	if(query_idx == DRAW_POLYGON)
+	{
+		free((*(PolygonQuery *)query).points);
+	}
+	free(query);
+}
+
 void *get_query_structure(int32_t idx)
 {
 	void *query = NULL;
@@ -53,7 +62,6 @@ void *get_query_structure(int32_t idx)
 			break;
 		}
 		case ROTATE_IMAGE: {
-
 			query = calloc(1, sizeof(RotateQuery));
 			break;
 		}

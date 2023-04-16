@@ -5,6 +5,7 @@
 #include <getopt.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdlib.h>
 
 bool parse_polygon_query(int32_t argc, char *argv[], char *file_name, PolygonQuery *query)
 {
@@ -20,8 +21,6 @@ bool parse_polygon_query(int32_t argc, char *argv[], char *file_name, PolygonQue
 			{"fill", required_argument, NULL, 'f'},
 			{"new", required_argument, NULL, 'n'},
 			{0, 0, 0, 0}};
-
-	memset(query, 0, sizeof(RectangleQuery));
 
 	int operation, operation_index = 0;
 	while((operation = getopt_long(argc, argv, "p:w:c:f:n:", long_options, &operation_index)) != -1)
@@ -64,6 +63,7 @@ bool parse_polygon_query(int32_t argc, char *argv[], char *file_name, PolygonQue
 				set_flags(&query->check_sum, NEW);
 				break;
 			case '?':
+				free_query(DRAW_POLYGON, query);
 				print_usage(optopt);
 			default:
 				break;
