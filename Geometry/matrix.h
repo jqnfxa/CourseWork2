@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 Matrix create(int32_t rows, int32_t columns);
+void copy_additional(Matrix *dst, Matrix *src, const int *avoid_colors, int size);
 void destroy(Matrix *matrix);
 
 Matrix transpose(Matrix *matrix);

@@ -388,3 +388,97 @@ bool validate_rotate(RotateQuery *query)
 	}
 	return true;
 }
+
+bool validate_line(LineQuery *query)
+{
+	if(query == NULL)
+	{
+		return false;
+	}
+	// validate coordinates
+	if(!match_flags(query->check_sum, START_POINT | END_POINT))
+	{
+		log_error(MISSING_ARGUMENT, "--start | --end");
+		return false;
+	}
+
+	// validate color
+	if(!match_flags(query->check_sum, COLOR))
+	{
+		log_error(MISSING_ARGUMENT, "--color");
+		return false;
+	}
+	if(!is_valid_rgb(query->color))
+	{
+		log_error(CONVERSATION, "--color");
+		return false;
+	}
+
+	// check if we have override width
+	if(match_flags(query->check_sum, WIDTH))
+	{
+		if(query->width <= 0)
+		{
+			log_error(CONVERSATION, "--width");
+			return false;
+		}
+	}
+	else
+	{
+		query->width = 1;
+	}
+
+	return true;
+}
+
+bool validate_polygon(PolygonQuery *query)
+{
+	if(query == NULL)
+	{
+		return false;
+	}
+	// validate coordinates
+	if(!match_flags(query->check_sum, START_POINT))
+	{
+		log_error(MISSING_ARGUMENT, "--points");
+		return false;
+	}
+
+	// validate color
+	if(!match_flags(query->check_sum, COLOR))
+	{
+		log_error(MISSING_ARGUMENT, "--color");
+		return false;
+	}
+	if(!is_valid_rgb(query->color))
+	{
+		log_error(CONVERSATION, "--color");
+		return false;
+	}
+
+	// check if we have override width
+	if(match_flags(query->check_sum, WIDTH))
+	{
+		if(query->width <= 0)
+		{
+			log_error(CONVERSATION, "--width");
+			return false;
+		}
+	}
+	else
+	{
+		query->width = 1;
+	}
+
+	// check if we have fill
+	if(match_flags(query->check_sum, FILL))
+	{
+		if(!is_valid_rgb(query->fill_color))
+		{
+			log_error(CONVERSATION, "--fill");
+			return false;
+		}
+	}
+
+	return true;
+}

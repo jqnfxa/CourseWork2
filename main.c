@@ -1,11 +1,13 @@
 #include "BmpLib/bmp_parser.h"
 #include "CLI/command_parser.h"
-#include "Draw/circle.h"
-#include "Draw/rectangle.h"
+#include "Draw/Shapes/polygon.h"
+#include "Draw/Shapes/circle.h"
+#include "Draw/Shapes/rectangle.h"
 #include "Draw/rotate.h"
 #include "Validator/validator.h"
 #include "Draw/frame.h"
 #include <stdio.h>
+#include <time.h>
 
 int main(int argc, char *argv[])
 {
@@ -95,7 +97,9 @@ int main(int argc, char *argv[])
 
 				if(a != NULL)
 				{
+					clock_t start = clock();
 					draw_circle(&a->matrix, &query);
+					printf("Time used: %f\n", 1.0 * (clock() - start) / CLOCKS_PER_SEC);
 
 					if(match_flags(query.check_sum, NEW))
 					{
@@ -116,6 +120,70 @@ int main(int argc, char *argv[])
 			else
 			{
 				fprintf(stderr, "--circle request invalid\n");
+			}
+			break;
+		}
+		case DRAW_LINE: {
+			LineQuery query;
+			if(parse_line_query(argc, argv, file_to_process, &query))
+			{
+				BMP *a = load_image(file_to_process);
+
+				if(a != NULL)
+				{
+					draw_line(&a->matrix, &query);
+
+					if(match_flags(query.check_sum, NEW))
+					{
+						unload_image(query.new_file, a);
+					}
+					else
+					{
+						unload_image(file_to_process, a);
+					}
+
+					safe_free_bmp(&a);
+				}
+				else
+				{
+					fprintf(stderr, "output file not found\n");
+				}
+			}
+			else
+			{
+				fprintf(stderr, "--line request invalid\n");
+			}
+			break;
+		}
+		case DRAW_POLYGON: {
+			PolygonQuery query;
+			if(parse_polygon_query(argc, argv, file_to_process, &query))
+			{
+				BMP *a = load_image(file_to_process);
+
+				if(a != NULL)
+				{
+					draw_polygon(&a->matrix, &query);
+
+					if(match_flags(query.check_sum, NEW))
+					{
+						unload_image(query.new_file, a);
+					}
+					else
+					{
+						unload_image(file_to_process, a);
+					}
+
+					safe_free_bmp(&a);
+				}
+				else
+				{
+					fprintf(stderr, "output file not found\n");
+				}
+			}
+			else
+			{
+				fprintf(stderr, "--polygon request invalid\n");
 			}
 			break;
 		}

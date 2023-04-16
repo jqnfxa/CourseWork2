@@ -20,6 +20,8 @@ enum OPERATION_TYPE {
 	DRAW_RECTANGLE,
 	DRAW_FRAME,
 	DRAW_CIRCLE,
+	DRAW_LINE,
+	DRAW_POLYGON,
 	ROTATE_IMAGE
 };
 
@@ -69,3 +71,25 @@ typedef struct RotateQuery {
 
 	int32_t check_sum;
 } RotateQuery;
+
+typedef struct LineQuery {
+	Point start;
+	Point end;
+	int32_t width;
+	int32_t color;
+
+	char new_file[256];
+	int32_t check_sum;
+} LineQuery;
+
+typedef struct PolygonQuery {
+	int32_t *points;
+	int32_t points_count;
+
+	int32_t width;
+	int32_t color;
+	int32_t fill_color;
+
+	char new_file[256];
+	int32_t check_sum;
+} PolygonQuery;

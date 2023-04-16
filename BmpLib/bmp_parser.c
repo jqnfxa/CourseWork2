@@ -105,14 +105,11 @@ BMP *create_image(int width, int height, int color)
 
 	image->matrix = create(height, width);
 
-	Point point;
 	for(int i = 0; i < image->matrix.height; ++i)
 	{
 		for(int j = 0; j < image->matrix.width; ++j)
 		{
-			point.x = i;
-			point.y = j;
-			set_pixel(&image->matrix, &point, color);
+			set_pixel(&image->matrix, i, j, color);
 		}
 	}
 

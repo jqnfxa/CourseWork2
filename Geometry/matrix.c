@@ -33,6 +33,38 @@ Matrix create(int32_t rows, int32_t columns)
 	return matrix;
 }
 
+void copy_additional(Matrix *dst, Matrix *src, const int *avoid_colors, int size)
+{
+	if(dst == NULL || src == NULL ||
+	   dst->height != src->height || dst->width != src->width ||
+	   avoid_colors == NULL)
+	{
+		return;
+	}
+
+	bool copyable = true;
+
+	for(int32_t i = 0; i < dst->height; ++i)
+	{
+		for(int32_t j = 0; j < dst->width; ++j)
+		{
+			copyable = true;
+			for(int32_t k = 0; k < size; ++k)
+			{
+				if(src->grid[i][j] == avoid_colors[k])
+				{
+					copyable = false;
+					break;
+				}
+			}
+			if(copyable)
+			{
+				dst->grid[i][j] = src->grid[i][j];
+			}
+		}
+	}
+}
+
 void destroy(Matrix *matrix)
 {
 	if(matrix == NULL)

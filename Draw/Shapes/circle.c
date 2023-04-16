@@ -1,6 +1,6 @@
 #include "circle.h"
-#include "../Validator/validator.h"
-#include "image.h"
+#include "../../Validator/validator.h"
+#include "../image.h"
 #include <stddef.h>
 
 //TODO small circle ( < 9*9) precision?
@@ -44,18 +44,16 @@ void draw_circle(Matrix *matrix, CircleQuery *info)
 		draw_circle_v1(matrix, info->center, info->radius - info->width, 0, info->fill_color);
 	}
 }
-
 void xLine(Matrix *matrix, int32_t x1, int32_t x2, int32_t y, int32_t color)
 {
 	if(matrix == NULL)
 	{
 		return;
 	}
-	Point pixel = {x1, y};
-	while(pixel.x <= x2)
+	while(x1 <= x2)
 	{
-		set_pixel(matrix, &pixel, color);
-		++pixel.x;
+		set_pixel(matrix, x1, y, color);
+		++x1;
 	}
 }
 
@@ -65,11 +63,10 @@ void yLine(Matrix *matrix, int32_t x, int32_t y1, int32_t y2, int32_t color)
 	{
 		return;
 	}
-	Point pixel = {x, y1};
-	while(pixel.y <= y2)
+	while(y1 <= y2)
 	{
-		set_pixel(matrix, &pixel, color);
-		++pixel.y;
+		set_pixel(matrix, x, y1, color);
+		++y1;
 	}
 }
 

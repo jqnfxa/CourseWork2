@@ -1,7 +1,7 @@
 #include "frame.h"
 #include "../Geometry/matrix.h"
 #include "../Validator/validator.h"
-#include "circle.h"
+#include "Shapes/circle.h"
 #include "image.h"
 #include <string.h>
 
@@ -62,21 +62,18 @@ void gen_simple_lines(Matrix **src, int frame_width, int color)
 		{
 			for(int32_t m = 0; m < line_width; ++m)
 			{
-				pp.x = k;
-				pp.y = j - m;
-				set_pixel(*src, &pp, color);
+				set_pixel(*src, k, j - m, color);
 			}
 		}
 	}
+
 	for(int32_t i = -(*src)->width - (*src)->height; i < (*src)->height; i += line_width * 2)
 	{
 		for(int32_t k = 0, j = i; k < (*src)->width; ++k, ++j)
 		{
 			for(int32_t m = 0; m < line_width; ++m)
 			{
-				pp.x = k;
-				pp.y = j + m;
-				set_pixel(*src, &pp, color);
+				set_pixel(*src, k, j + m, color);
 			}
 		}
 	}

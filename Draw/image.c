@@ -39,26 +39,38 @@ void paste(Matrix *dst, Matrix *src, Point *left_up)
 		return;
 	}
 
-	Point pixel = {.x = left_up->x, .y = left_up->y};
-
-	for(int32_t i = 0; i < src->height; ++i, ++pixel.y)
+	for(int32_t i = 0, y = left_up->y; i < src->height; ++i, ++y)
 	{
-		pixel.x = left_up->x;
-		for(int32_t j = 0; j < src->width; ++j, ++pixel.x)
+		for(int32_t j = 0, x = left_up->x; j < src->width; ++j, ++x)
 		{
-			set_pixel(dst, &pixel, src->grid[i][j]);
+			set_pixel(dst, x, y, src->grid[i][j]);
 		}
 	}
 }
 
-void set_pixel(Matrix *matrix, Point *point, int32_t color)
+void set_pixel(Matrix *matrix, int32_t x, int32_t y, int32_t color)
 {
-	if(!is_in_bound(matrix, point))
+	Point point = {x, y};
+	if(!is_in_bound(matrix, &point))
 	{
 		return;
 	}
 
-	matrix->grid[point->y][point->x] = color;
+	matrix->grid[y][x] = color;
+}
+
+void set_pixel_avoid(Matrix *matrix, int32_t x, int32_t y, int32_t color, int danger_color)
+{
+	Point point = {x, y};
+	if(!is_in_bound(matrix, &point))
+	{
+		return;
+	}
+
+	if(matrix->grid[y][x] != danger_color)
+	{
+		matrix->grid[y][x] = color;
+	}
 }
 
 int32_t rgb_to_int(RGB *color)

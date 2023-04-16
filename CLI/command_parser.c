@@ -15,6 +15,8 @@ enum OPERATION_TYPE parse_user_command(int32_t argc, char *argv[])
 			{"rectangle", no_argument, &operation_type, DRAW_RECTANGLE},
 			{"circle", no_argument, &operation_type, DRAW_CIRCLE},
 			{"frame", no_argument, &operation_type, DRAW_FRAME},
+			{"line", no_argument, &operation_type, DRAW_LINE},
+			{"polygon", no_argument, &operation_type, DRAW_POLYGON},
 			{"rotate", no_argument, &operation_type, ROTATE_IMAGE},
 			{"help", no_argument, NULL, 'h'},
 			{0, 0, 0, 0}};

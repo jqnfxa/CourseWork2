@@ -1,6 +1,6 @@
 #include "rectangle.h"
-#include "../Validator/validator.h"
-#include "image.h"
+#include "../../Validator/validator.h"
+#include "../image.h"
 #include <stddef.h>
 
 void draw_rectangle(Matrix *matrix, RectangleQuery *info)
@@ -45,7 +45,7 @@ void draw_rectangle(Matrix *matrix, RectangleQuery *info)
 	drawing_area.left_up = (Point){info->area.right_bottom.x - info->width, info->area.left_up.x + info->width},
 	drawing_area.right_bottom = (Point){info->area.right_bottom.x, info->area.right_bottom.y - info->width};
 
-	// left
+	// right
 	draw_filled_rectangle(matrix, &drawing_area, info->color);
 
 	if(!match_flags(info->check_sum, FILL))
@@ -76,13 +76,11 @@ void draw_filled_rectangle(Matrix *matrix, Area *area, int32_t color)
 
 	shrink_to_fit(matrix->width, matrix->height, area);
 
-	Point pixel = {area->left_up.x, area->left_up.y};
-
-	for(pixel.y = area->left_up.y; pixel.y <= area->right_bottom.y; ++pixel.y)
+	for(int32_t y = area->left_up.y; y <= area->right_bottom.y; ++y)
 	{
-		for(pixel.x = area->left_up.x; pixel.x <= area->right_bottom.x; ++pixel.x)
+		for(int32_t x = area->left_up.x; x <= area->right_bottom.x; ++x)
 		{
-			set_pixel(matrix, &pixel, color);
+			set_pixel(matrix, x, y, color);
 		}
 	}
 }

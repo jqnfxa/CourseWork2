@@ -24,3 +24,5 @@ int16_t get_circle_type(CircleQuery *query);
 bool validate_circle(CircleQuery *query);
 bool validate_frame(FrameQuery *query);
 bool validate_rotate(RotateQuery *query);
+bool validate_line(LineQuery *query);
+bool validate_polygon(PolygonQuery *query);
