@@ -334,8 +334,10 @@ int polygon_generic(Matrix *matrix, int n, Edge *e, int color, int danger_color)
 							// Determine points from the edges on the next row
 							// Or if this is the last row, check the previous row
 							int offset = y_min == y_max ? -1 : 1;
-							adjacent_line_x = (float)(y_min + offset - current->y0) * current->dx + (float)current->x0;
-							adjacent_line_x_other_edge = (float)(y_min + offset - other_edge->y0) * other_edge->dx + (float)other_edge->x0;
+							adjacent_line_x = (float)(y_min + offset - current->y0) * current->dx +
+											  (float)current->x0;
+							adjacent_line_x_other_edge = (float)(y_min + offset - other_edge->y0) * other_edge->dx +
+														 (float)other_edge->x0;
 							if(y_min == current->ymax)
 							{
 								if(current->dx > 0)
