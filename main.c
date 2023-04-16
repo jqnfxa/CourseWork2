@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 		{
 			TaskFunctions[query_idx](&image->matrix, query);
 
+			(void)resize_image(image);
 			(void)get_file_to_unload(query_idx, query, file_to_process);
 
 			unload_image(file_to_process, image);
