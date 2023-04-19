@@ -3,6 +3,23 @@
 #include "../ExceptionHandler/logger.h"
 #include <stdlib.h>
 
+const char *CompressionStrings[14] = {
+	"BI_RGB",
+	"BI_RLE8",
+	"BI_RLE4",
+	"BI_BITFIELDS",
+	"BI_JPEG",
+	"BI_PNG",
+	"BI_ALPHABITFIELDS",
+	"UNKNOWN",
+	"UNKNOWN",
+	"UNKNOWN",
+	"UNKNOWN",
+	"BI_CMYK",
+	"BI_CMYKRLE8",
+	"BI_CMYKRLE4"
+};
+
 BMP *load_image(const char *filename)
 {
 	FILE *file = fopen(filename, "rb");
@@ -109,35 +126,187 @@ BMP *create_image(int32_t width, int32_t height, int32_t color)
 
 void dump_info(FILE *stream, const char *filename)
 {
-	BMP *image = load_image(filename);
+	FILE *file = fopen(filename, "rb");
 
-	if(image == NULL)
+	if(file == NULL)
 	{
+		log_error(FILE_OPEN, filename);
 		return;
 	}
 
+	if(!dump_info_header(stream, file))
+	{
+		fclose(file);
+		return;
+	}
+	if(!dump_dib_header(stream, file))
+	{
+		fclose(file);
+		log_error(FILE_INVALID, "");
+		return;
+	}
+	fclose(file);
+}
+
+bool dump_info_header(FILE *stream, FILE *file)
+{
+	if(stream == NULL || file == NULL)
+	{
+		return false;
+	}
+
+	BITMAPFILEHEADER file_header;
+
+	if(!safe_fread((void *)&file_header, sizeof(file_header), 1, file))
+	{
+		return false;
+	}
+
+	if(file_header.bfType != BMP_INDENTIFIER)
+	{
+		fprintf(stream, "File is not bmp\n");
+		return false;
+	}
+
 	fprintf(stream, "Bitmap info header\n");
-	fprintf(stream, "bfType:      %d\n", image->header.bfType);
-	fprintf(stream, "bfSize:      %d\n", image->header.bfSize);
-	fprintf(stream, "bfReserved1: %d\n", image->header.bfReserved1);
-	fprintf(stream, "bfReserved2: %d\n", image->header.bfReserved2);
-	fprintf(stream, "bfReserve2:  %d\n", image->header.bfReserved2);
-	fprintf(stream, "bfOffBits:   %d\n", image->header.bfOffBits);
-	fprintf(stream, "\nBitmap DIB header\n");
+	fprintf(stream, "bfType:      0x%x\n", file_header.bfType, file_header.bfType);
+	fprintf(stream, "bfSize:      %d\n", file_header.bfSize);
+	fprintf(stream, "bfReserved1: %d\n", file_header.bfReserved1);
+	fprintf(stream, "bfReserved2: %d\n", file_header.bfReserved2);
+	fprintf(stream, "bfOffBits:   %d\n\n", file_header.bfOffBits);
 
-	fprintf(stream, "biSize:      %d\n", image->dib_header.biSize);
-	fprintf(stream, "biWidth:     %d\n", image->dib_header.biWidth);
-	fprintf(stream, "biHeight:    %d\n", image->dib_header.biHeight);
-	fprintf(stream, "biPlanes:    %d\n", image->dib_header.biPlanes);
-	fprintf(stream, "biBitCount:  %d\n", image->dib_header.biBitCount);
-	fprintf(stream, "biCompress:  %d\n", image->dib_header.biCompression);
-	fprintf(stream, "biSizeImage: %d\n", image->dib_header.biSizeImage);
-	fprintf(stream, "biXPPM:      %d\n", image->dib_header.biXPPM);
-	fprintf(stream, "biYPPM:      %d\n", image->dib_header.biYPPM);
-	fprintf(stream, "biClrUsed:   %d\n", image->dib_header.biClrUsed);
-	fprintf(stream, "biImportant: %d\n", image->dib_header.biClrImportant);
+	return true;
+}
 
-	safe_free_bmp(&image);
+bool dump_dib_header(FILE *stream, FILE *file)
+{
+	if(stream == NULL || file == NULL)
+	{
+		return false;
+	}
+
+	int dib_header_size = 0;
+
+	if(!safe_fread((void *)&dib_header_size, sizeof(int), 1, file))
+	{
+		return false;
+	}
+
+	fseek(file, 14, SEEK_SET);
+
+	switch(dib_header_size)
+	{
+		case 12:
+		{
+			BITMAPCOREHEADER dib_header;
+
+			if(!safe_fread((void *)&dib_header, sizeof(dib_header), 1, file))
+			{
+				return false;
+			}
+
+			fprintf(stream, "\nBitmap DIB header (BITMAPCOREHEADER)\n");
+			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
+			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
+			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
+			fprintf(stream, "biPlanes:    %d\n", dib_header.biPlanes);
+			fprintf(stream, "biBitCount:  %d\n", dib_header.biBitCount);
+		}
+		break;
+		case 40:
+		{
+			BITMAPINFOHEADER dib_header;
+
+			if(!safe_fread((void *)&dib_header, sizeof(dib_header), 1, file))
+			{
+				return false;
+			}
+
+			fprintf(stream, "\nBitmap DIB header (BITMAPINFOHEADER)\n");
+			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
+			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
+			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
+			fprintf(stream, "biPlanes:    %d\n", dib_header.biPlanes);
+			fprintf(stream, "biBitCount:  %d\n", dib_header.biBitCount);
+			fprintf(stream, "biCompress:  %s\n", CompressionStrings[dib_header.biCompression % 14]);
+			fprintf(stream, "biSizeImage: %d\n", dib_header.biSizeImage);
+			fprintf(stream, "biXPPM:      %d\n", dib_header.biXPPM);
+			fprintf(stream, "biYPPM:      %d\n", dib_header.biYPPM);
+			fprintf(stream, "biClrUsed:   %d\n", dib_header.biClrUsed);
+			fprintf(stream, "biImportant: %d\n", dib_header.biClrImportant);
+		}
+		break;
+		case 108:
+		{
+			BITMAPV4HEADER dib_header;
+
+			if(!safe_fread((void *)&dib_header, sizeof(dib_header), 1, file))
+			{
+				return false;
+			}
+
+			fprintf(stream, "\nBitmap DIB header (BITMAPINFOHEADER)\n");
+			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
+			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
+			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
+			fprintf(stream, "biPlanes:    %d\n", dib_header.biPlanes);
+			fprintf(stream, "biBitCount:  %d\n", dib_header.biBitCount);
+			fprintf(stream, "biCompress:  %s\n", CompressionStrings[dib_header.biCompression % 14]);
+			fprintf(stream, "biSizeImage: %d\n", dib_header.biSizeImage);
+			fprintf(stream, "biXPPM:      %d\n", dib_header.biXPPM);
+			fprintf(stream, "biYPPM:      %d\n", dib_header.biYPPM);
+			fprintf(stream, "biClrUsed:   %d\n", dib_header.biClrUsed);
+			fprintf(stream, "biImportant: %d\n", dib_header.biClrImportant);
+			fprintf(stream, "biRedMask:   0x%x\n", dib_header.biRedMask);
+			fprintf(stream, "biGreenMask: 0x%x\n", dib_header.biGreenMask);
+			fprintf(stream, "biBlueMask:  0x%x\n", dib_header.biBlueMask);
+			fprintf(stream, "biAlphaMask: 0x%x\n", dib_header.biAlphaMask);
+			fprintf(stream, "biCSType:    0x%x\n", dib_header.biCSType);
+			fprintf(stream, "biGammaRed:  0x%x\n", dib_header.biGammaRed);
+			fprintf(stream, "biGammaGrn:  0x%x\n", dib_header.biGammaGreen);
+			fprintf(stream, "biGammaBlue: 0x%x\n", dib_header.biGammaBlue);
+		}
+		break;
+		case 124:
+		{
+			BITMAPV5HEADER dib_header;
+
+			if(!safe_fread((void *)&dib_header, sizeof(dib_header), 1, file))
+			{
+				return false;
+			}
+
+			fprintf(stream, "\nBitmap DIB header (BITMAPINFOHEADER)\n");
+			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
+			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
+			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
+			fprintf(stream, "biPlanes:    %d\n", dib_header.biPlanes);
+			fprintf(stream, "biBitCount:  %d\n", dib_header.biBitCount);
+			fprintf(stream, "biCompress:  %s\n", CompressionStrings[dib_header.biCompression % 14]);
+			fprintf(stream, "biSizeImage: %d\n", dib_header.biSizeImage);
+			fprintf(stream, "biXPPM:      %d\n", dib_header.biXPPM);
+			fprintf(stream, "biYPPM:      %d\n", dib_header.biYPPM);
+			fprintf(stream, "biClrUsed:   %d\n", dib_header.biClrUsed);
+			fprintf(stream, "biImportant: %d\n", dib_header.biClrImportant);
+			fprintf(stream, "biRedMask:   0x%x\n", dib_header.biRedMask);
+			fprintf(stream, "biGreenMask: 0x%x\n", dib_header.biGreenMask);
+			fprintf(stream, "biBlueMask:  0x%x\n", dib_header.biBlueMask);
+			fprintf(stream, "biAlphaMask: 0x%x\n", dib_header.biAlphaMask);
+			fprintf(stream, "biCSType:    0x%x\n", dib_header.biCSType);
+			fprintf(stream, "biGammaRed:  0x%x\n", dib_header.biGammaRed);
+			fprintf(stream, "biGammaGrn:  0x%x\n", dib_header.biGammaGreen);
+			fprintf(stream, "biGammaBlue: 0x%x\n", dib_header.biGammaBlue);
+			fprintf(stream, "biIntent:    0x%x\n", dib_header.biIntent);
+			fprintf(stream, "biProfData:  0x%x\n", dib_header.biProfileData);
+			fprintf(stream, "biProfSize:  0x%x\n", dib_header.biProfileSize);
+			fprintf(stream, "biReserved:  0x%x\n", dib_header.biReserved);
+		}
+		break;
+		default:
+			return false;
+	}
+
+	return true;
 }
 
 bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix, uint32_t alignment)
@@ -192,7 +361,7 @@ bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 	char empty_byte = 0;
 
 	// we need to write scan lines
-	for(int32_t i = matrix->height - 1; i >= 0; i--)
+	for(int32_t i = matrix->height - 1; i >= 0; --i)
 	{
 		for(int32_t j = 0; j < matrix->width; ++j)
 		{
@@ -205,7 +374,7 @@ bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 		}
 
 		// add junk bytes if required
-		if(!fwrite(&empty_byte, sizeof(char), alignment, file))
+		if(fwrite(&empty_byte, sizeof(char), alignment, file) != alignment)
 		{
 			return false;
 		}
@@ -235,7 +404,7 @@ void resize_image(BMP *image)
 
 bool unload_image(const char *filename, BMP *picture)
 {
-	if(picture == NULL)
+	if(picture == NULL || filename == NULL || *filename == '\0')
 	{
 		return false;
 	}

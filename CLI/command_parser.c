@@ -4,6 +4,7 @@
 #include "../Draw/Shapes/rectangle.h"
 #include "../Draw/frame.h"
 #include "../Draw/rotate.h"
+#include "../BmpLib/bmp_parser.h"
 #include "../ExceptionHandler/logger.h"
 #include "../Validator/validator.h"
 #include <stddef.h>
@@ -25,7 +26,8 @@ bool (*TaskFunctions[6])(Matrix *matrix, void *query) = {
 	(bool (*)(Matrix *, void *))draw_circle,
 	(bool (*)(Matrix *, void *))draw_line,
 	(bool (*)(Matrix *, void *))draw_polygon,
-	(bool (*)(Matrix *, void *))rotate_area};
+	(bool (*)(Matrix *, void *))rotate_area,
+};
 
 void free_query(int32_t query_idx, void *query)
 {
@@ -122,6 +124,7 @@ void get_file_to_unload(int32_t query_idx, void *query, char *file_name)
 			}
 			break;
 		}
+		case PRINT_INFO:
 		case UNDEFINED:
 		default:
 			break;
@@ -144,6 +147,7 @@ enum OPERATION_TYPE parse_user_command(int32_t argc, char *argv[])
 			{"line", no_argument, &operation_type, DRAW_LINE},
 			{"polygon", no_argument, &operation_type, DRAW_POLYGON},
 			{"rotate", no_argument, &operation_type, ROTATE_IMAGE},
+			{"info", required_argument, &operation_type, PRINT_INFO},
 			{"help", no_argument, NULL, 'h'},
 			{0, 0, 0, 0}};
 

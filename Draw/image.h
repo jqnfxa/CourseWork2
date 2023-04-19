@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../BmpLib/bmp_24.h"
+#include "../BmpLib/bmp_structures.h"
 #include "../Geometry/matrix.h"
 
 Matrix crop(Matrix *matrix, Area *area);

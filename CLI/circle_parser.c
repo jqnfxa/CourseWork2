@@ -94,12 +94,13 @@ bool parse_circle_query(int32_t argc, char *argv[], char *file_name, CircleQuery
 
 	if(optind >= argc || !is_valid_bmp(argv[optind]))
 	{
-		log_error(TOO_FEW_ARGUMENTS, " for circle");
+		log_error(TOO_FEW_ARGUMENTS, "for circle");
+
 		return false;
 	}
 	if(!validate_circle(query))
 	{
-		log_error(INPUT_INVALID, " for circle");
+		log_error(INPUT_INVALID, "for circle");
 		return false;
 	}
 

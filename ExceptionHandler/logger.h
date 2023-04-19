@@ -16,7 +16,8 @@ enum ERROR_CODE {
 	INPUT_INVALID,
 	MISSING_ARGUMENT,
 	CONVERSATION,
-	AMBIGUOUS_CALL
+	AMBIGUOUS_CALL,
+	INVALID_QUERY,
 };
 
 void log_error(enum ERROR_CODE code, const char *extra_data);

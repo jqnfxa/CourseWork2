@@ -13,7 +13,8 @@ const char *error_messages[] = {
 	"Failed to validate query: invalid input",
 	"Failed to validate query: missing argument",
 	"Failed to convert",
-	"Failed to validate query: ambiguous call"
+	"Failed to validate query: ambiguous call",
+	"Failed to validate query: wrong arguments"
 };
 
 void log_error(enum ERROR_CODE code, const char *extra_data)
@@ -50,6 +51,8 @@ const char *hint =
 	"\n"
 	"\t-h, --help                             print this useful hint\n"
 	"\t\n"
+	"\t-i, --info <filename>.bmp	       prints info about bmp file\n"
+ 	"\t\n"
 	"\t--rectangle [options] <filename>.bmp\n"
 	"\t\n"
 	"\t\t-s, --start x,y                set the upper left corner of rectangle\n"

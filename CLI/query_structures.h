@@ -22,7 +22,8 @@ enum OPERATION_TYPE {
 	DRAW_CIRCLE,
 	DRAW_LINE,
 	DRAW_POLYGON,
-	ROTATE_IMAGE
+	ROTATE_IMAGE,
+	PRINT_INFO
 };
 
 enum ROTATE_DIRECTION {
@@ -99,3 +100,7 @@ typedef struct PolygonQuery {
 
 	char new_file[256];
 } PolygonQuery;
+
+typedef struct InfoQuery {
+	char file[256];
+} InfoQuery;

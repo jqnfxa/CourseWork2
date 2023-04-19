@@ -76,9 +76,9 @@ void draw_filled_rectangle(Matrix *matrix, Area *area, int32_t color)
 
 	shrink_to_fit(matrix->width, matrix->height, area);
 
-	for(int32_t y = area->left_up.y; y <= area->right_bottom.y; ++y)
+	for(int32_t y = area->left_up.y; y < area->right_bottom.y; ++y)
 	{
-		for(int32_t x = area->left_up.x; x <= area->right_bottom.x; ++x)
+		for(int32_t x = area->left_up.x; x < area->right_bottom.x; ++x)
 		{
 			set_pixel(matrix, x, y, color);
 		}
