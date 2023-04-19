@@ -23,8 +23,8 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 
 	strcpy(copy, argument);
 
-	int parsed[2] = {0, 0};
-	int i = 0;
+	int32_t parsed[2] = {0, 0};
+	int32_t i = 0;
 	char *token = NULL;
 	for(token = strtok(copy, ",");
 		i < 2 && token != NULL;
@@ -36,7 +36,6 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 			return false;
 		}
 	}
-	//TODO may be let input like: 1,2,2,2,... i.e. parse only 2 first values?
 	if(token != NULL || i != 2)
 	{
 		log_error(CONVERSATION, option_name);
@@ -52,7 +51,7 @@ bool parse_point_values(const char *argument, Point *point, const char *option_n
 	return true;
 }
 
-bool parse_int(const char *argument, int *val, const char *option_name, int base)
+bool parse_int(const char *argument, int32_t *val, const char *option_name, int32_t base)
 {
 	if(val == NULL)
 	{
@@ -63,7 +62,7 @@ bool parse_int(const char *argument, int *val, const char *option_name, int base
 		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
-	*val = (int)strtol(argument, NULL, base);
+	*val = (int32_t)strtol(argument, NULL, base);
 
 	if(errno == EINVAL || errno == ERANGE)
 	{
@@ -95,7 +94,7 @@ bool parse_file_name(const char *argument, char *name, const char *option_name)
 	return true;
 }
 
-bool parse_color(const char *argument, int *color, const char *option_name)
+bool parse_color(const char *argument, int32_t *color, const char *option_name)
 {
 	if(argument == NULL || *argument != '#')
 	{
@@ -129,7 +128,7 @@ bool parse_points(const char *argument, int32_t **arr, int32_t *count, const cha
 	strcpy(copy, argument);
 
 	int32_t cap = 6;
-	*arr = (int32_t *)malloc(sizeof(int) * cap);
+	*arr = (int32_t *)malloc(sizeof(int32_t) * cap);
 	*count = 0;
 
 	if(*arr == NULL)
@@ -146,7 +145,7 @@ bool parse_points(const char *argument, int32_t **arr, int32_t *count, const cha
 		if(*count >= cap)
 		{
 			cap += 12;
-			int32_t *tmp = (int32_t *)realloc(*arr, sizeof(int) * cap);
+			int32_t *tmp = (int32_t *)realloc(*arr, sizeof(int32_t) * cap);
 
 			if(tmp == NULL)
 			{

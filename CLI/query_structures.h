@@ -40,16 +40,18 @@ typedef struct CircleQuery {
 	int32_t width;
 	int32_t color;
 	int32_t fill_color;
-	char new_file[256];
 	int32_t check_sum;
+
+	char new_file[256];
 } CircleQuery;
 
 typedef struct FrameQuery {
 	int32_t type;
 	int32_t color;
 	int32_t width;
-	char new_file[256];
 	int32_t check_sum;
+
+	char new_file[256];
 } FrameQuery;
 
 typedef struct RectangleQuery {
@@ -58,38 +60,42 @@ typedef struct RectangleQuery {
 	int32_t width;
 	int32_t color;
 	int32_t fill_color;
-	char new_file[256];
 	int32_t check_sum;
+
+	char new_file[256];
 } RectangleQuery;
 
 typedef struct RotateQuery {
 	Area area;
 
 	enum ROTATE_DIRECTION direction;
-	int32_t angle;
-	char new_file[256];
 
+	int32_t angle;
 	int32_t check_sum;
+
+	char new_file[256];
 } RotateQuery;
 
 typedef struct LineQuery {
 	Point start;
 	Point end;
+
 	int32_t width;
 	int32_t color;
+	int32_t check_sum;
 
 	char new_file[256];
-	int32_t check_sum;
 } LineQuery;
 
 typedef struct PolygonQuery {
+	// points should be mallocated
 	int32_t *points;
 	int32_t points_count;
 
 	int32_t width;
 	int32_t color;
 	int32_t fill_color;
+	int32_t check_sum;
 
 	char new_file[256];
-	int32_t check_sum;
 } PolygonQuery;

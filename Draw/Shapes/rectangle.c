@@ -53,8 +53,8 @@ void draw_rectangle(Matrix *matrix, RectangleQuery *info)
 		return;
 	}
 
-	int width_y = min(info->width, (diff.y + 1) / 2);
-	int width_x = min(info->width, (diff.x + 1) / 2);
+	int32_t width_y = min(info->width, (diff.y + 1) / 2);
+	int32_t width_x = min(info->width, (diff.x + 1) / 2);
 
 	drawing_area.left_up = (Point){info->area.left_up.x + width_x, info->area.left_up.y + width_y};
 	drawing_area.right_bottom = (Point){info->area.right_bottom.x - width_x, info->area.right_bottom.y - width_y};

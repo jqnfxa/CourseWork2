@@ -5,7 +5,6 @@
 #include <getopt.h>
 #include <stddef.h>
 #include <string.h>
-#include <stdlib.h>
 
 bool parse_line_query(int32_t argc, char *argv[], char *file_name, LineQuery *query)
 {
@@ -22,7 +21,7 @@ bool parse_line_query(int32_t argc, char *argv[], char *file_name, LineQuery *qu
 			{"new", required_argument, NULL, 'n'},
 			{0, 0, 0, 0}};
 
-	int operation, operation_index = 0;
+	int32_t operation, operation_index = 0;
 	while((operation = getopt_long(argc, argv, "s:e:w:c:n:", long_options, &operation_index)) != -1)
 	{
 		switch(operation)

@@ -134,7 +134,7 @@ enum OPERATION_TYPE parse_user_command(int32_t argc, char *argv[])
 	{
 		print_usage(optopt);
 	}
-	int operation_type = UNDEFINED;
+	int32_t operation_type = UNDEFINED;
 
 	struct option long_options[] =
 		{

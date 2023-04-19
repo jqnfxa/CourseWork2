@@ -32,7 +32,7 @@ void log_error(enum ERROR_CODE code, const char *extra_data)
 }
 
 // function terminates program
-int __attribute__((__noreturn__)) print_usage(int opt)
+int __attribute__((__noreturn__)) print_usage(int32_t opt)
 {
 	int32_t error = (opt == '?');
 

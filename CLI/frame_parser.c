@@ -4,7 +4,6 @@
 #include "types_parser.h"
 #include <stddef.h>
 #include <string.h>
-#include <stdlib.h>
 
 bool parse_frame_query(int32_t argc, char *argv[], char *file_name, FrameQuery *query)
 {
@@ -20,7 +19,7 @@ bool parse_frame_query(int32_t argc, char *argv[], char *file_name, FrameQuery *
 			{"new", required_argument, NULL, 'n'},
 			{0, 0, 0, 0}};
 
-	int operation, operation_index = 0;
+	int32_t operation, operation_index = 0;
 	while((operation = getopt_long(argc, argv, "t:c:w:n:", long_options, &operation_index)) != -1)
 	{
 		switch(operation)

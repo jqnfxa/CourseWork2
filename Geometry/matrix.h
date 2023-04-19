@@ -5,6 +5,7 @@
 
 Matrix create(int32_t rows, int32_t columns);
 Matrix create_filled(int32_t rows, int32_t columns, int32_t color);
+void fill(Matrix *matrix, int32_t color);
 void copy_additional(Matrix *dst, Matrix *src, const int32_t *avoid_colors, int32_t size);
 void destroy(Matrix *matrix);
 

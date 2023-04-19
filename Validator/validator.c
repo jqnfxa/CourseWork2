@@ -80,7 +80,7 @@ bool is_in_bound(Matrix *matrix, Point *position)
 	return true;
 }
 
-bool is_valid_rgb(int color)
+bool is_valid_rgb(int32_t color)
 {
 	if(color < 0 || color > 0xffffff)
 	{

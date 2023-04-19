@@ -7,23 +7,23 @@
 /*
  * private attributes
  */
-#define round_up(f) ((int)((double)(f) >= 0.0 ? floor((double)(f) + 0.5) : -floor(fabs((double)f) + 0.5)))
-#define round_down(f) ((int)((double)(f) >= 0.0 ? ceil((double)(f) - 0.5) : -ceil(fabs((double)f) - 0.5)))
+#define round_up(f) ((int32_t)((double)(f) >= 0.0 ? floor((double)(f) + 0.5) : -floor(fabs((double)f) + 0.5)))
+#define round_down(f) ((int32_t)((double)(f) >= 0.0 ? ceil((double)(f) - 0.5) : -ceil(fabs((double)f) - 0.5)))
 
 typedef struct {
 	/* edge descriptor for polygon engine */
-	int d;
-	int x0, y0;
-	int xmin, ymin, xmax, ymax;
+	int32_t d;
+	int32_t x0, y0;
+	int32_t xmin, ymin, xmax, ymax;
 	float dx;
 } Edge;
 
-int draw_wide_line(Matrix *matrix, int x0, int y0, int x1, int y1, int color, int width, int danger_color);
-void draw_elementary_line(Matrix *matrix, int x0, int y0, int x1, int y1, int color, int danger_color);
-void hline(Matrix *matrix, int x0, int y0, int x1, int color, int danger_color);
-int x_cmp(const void *x0, const void *x1);
-int polygon_generic(Matrix *matrix, int n, Edge *e, int color, int danger_color);
-int draw_elementary_polygon(Matrix *matrix, int count, int *xy, int color, int fill, int width, int danger_color);
+int32_t draw_wide_line(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, int32_t width, int32_t danger_color);
+void draw_elementary_line(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, int32_t danger_color);
+void hline(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t color, int32_t danger_color);
+int32_t x_cmp(const void *x0, const void *x1);
+int32_t polygon_generic(Matrix *matrix, int32_t n, Edge *e, int32_t color, int32_t danger_color);
+int32_t draw_elementary_polygon(Matrix *matrix, int32_t count, int32_t *xy, int32_t color, int32_t fill, int32_t width, int32_t danger_color);
 // end of private
 
 /*
@@ -66,14 +66,14 @@ void draw_polygon(Matrix *matrix, PolygonQuery *info)
 		{
 			Matrix new_image = create(matrix->height, matrix->width);
 
-			int avoid_color = invert_color(info->color);
+			int32_t avoid_color = invert_color(info->color);
 			draw_elementary_polygon(&new_image, info->points_count, info->points, avoid_color, 1, 1, -1);
 
-			int width = info->width * 2 - 1;
+			int32_t width = info->width * 2 - 1;
 
 			draw_elementary_polygon(&new_image, info->points_count, info->points, info->color, 0, width, 0x0);
 
-			int avoid[] = {avoid_color, 0x0};
+			int32_t avoid[] = {avoid_color, 0x0};
 
 			copy_additional(matrix, &new_image, avoid, 2);
 
@@ -82,11 +82,11 @@ void draw_polygon(Matrix *matrix, PolygonQuery *info)
 	}
 }
 
-void draw_elementary_line(Matrix *matrix, int x0, int y0, int x1, int y1, int color, int danger_color)
+void draw_elementary_line(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, int32_t danger_color)
 {
-	int i, n, e;
-	int dx, dy;
-	int xs, ys;
+	int32_t i, n, e;
+	int32_t dx, dy;
+	int32_t xs, ys;
 
 	/* normalize coordinates */
 	dx = x1 - x0;
@@ -198,7 +198,7 @@ void draw_elementary_line(Matrix *matrix, int x0, int y0, int x1, int y1, int co
 	}
 }
 
-void hline(Matrix *matrix, int x0, int y0, int x1, int color, int danger_color)
+void hline(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t color, int32_t danger_color)
 {
 	if(y0 >= 0 && y0 < matrix->height)
 	{
@@ -226,7 +226,7 @@ void hline(Matrix *matrix, int x0, int y0, int x1, int color, int danger_color)
 	}
 }
 
-int x_cmp(const void *x0, const void *x1)
+int32_t x_cmp(const void *x0, const void *x1)
 {
 	float diff = *((float *)x0) - *((float *)x1);
 	if(diff < 0)
@@ -243,14 +243,14 @@ int x_cmp(const void *x0, const void *x1)
 	}
 }
 
-int polygon_generic(Matrix *matrix, int n, Edge *e, int color, int danger_color)
+int32_t polygon_generic(Matrix *matrix, int32_t n, Edge *e, int32_t color, int32_t danger_color)
 {
 	Edge **edge_table;
 	float *xx;
-	int edge_count = 0;
-	int y_min = matrix->height - 1;
-	int y_max = 0;
-	int i, j, k;
+	int32_t edge_count = 0;
+	int32_t y_min = matrix->height - 1;
+	int32_t y_max = 0;
+	int32_t i, j, k;
 	float adjacent_line_x, adjacent_line_x_other_edge;
 
 	if(n <= 0)
@@ -332,7 +332,7 @@ int polygon_generic(Matrix *matrix, int n, Edge *e, int color, int danger_color)
 						{
 							// Determine points from the edges on the next row
 							// Or if this is the last row, check the previous row
-							int offset = y_min == y_max ? -1 : 1;
+							int32_t offset = y_min == y_max ? -1 : 1;
 							adjacent_line_x = (float)(y_min + offset - current->y0) * current->dx +
 											  (float)current->x0;
 							adjacent_line_x_other_edge = (float)(y_min + offset - other_edge->y0) * other_edge->dx +
@@ -378,7 +378,7 @@ int polygon_generic(Matrix *matrix, int n, Edge *e, int color, int danger_color)
 	return 0;
 }
 
-void add_edge(Edge *e, int x0, int y0, int x1, int y1)
+void add_edge(Edge *e, int32_t x0, int32_t y0, int32_t x1, int32_t y1)
 {
 	if(x0 <= x1)
 	{
@@ -420,11 +420,11 @@ void add_edge(Edge *e, int x0, int y0, int x1, int y1)
 	e->y0 = y0;
 }
 
-int draw_wide_line(Matrix *matrix, int x0, int y0, int x1, int y1, int color, int width, int danger_color)
+int32_t draw_wide_line(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, int32_t width, int32_t danger_color)
 {
-	int dx, dy;
+	int32_t dx, dy;
 	double big_hypotenuse, small_hypotenuse, ratio_max, ratio_min;
-	int dx_min, dx_max, dy_min, dy_max;
+	int32_t dx_min, dx_max, dy_min, dy_max;
 	Edge e[4];
 
 	dx = x1 - x0;
@@ -445,7 +445,7 @@ int draw_wide_line(Matrix *matrix, int x0, int y0, int x1, int y1, int color, in
 	dy_min = round_down(ratio_min * dx);
 	dy_max = round_down(ratio_max * dx);
 	{
-		int vertices[4][2] = {
+		int32_t vertices[4][2] = {
 			{x0 - dx_min, y0 + dy_max},
 			{x1 - dx_min, y1 + dy_max},
 			{x1 + dx_max, y1 - dy_min},
@@ -461,9 +461,9 @@ int draw_wide_line(Matrix *matrix, int x0, int y0, int x1, int y1, int color, in
 	return 0;
 }
 
-int draw_elementary_polygon(Matrix *matrix, int count, int *xy, int color, int fill, int width, int danger_color)
+int32_t draw_elementary_polygon(Matrix *matrix, int32_t count, int32_t *xy, int32_t color, int32_t fill, int32_t width, int32_t danger_color)
 {
-	int i, n, x0, y0, x1, y1;
+	int32_t i, n, x0, y0, x1, y1;
 
 	if(count <= 0)
 	{

@@ -1,7 +1,6 @@
 #include "BmpLib/bmp_parser.h"
 #include "CLI/command_parser.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 int main(int argc, char *argv[])
 {

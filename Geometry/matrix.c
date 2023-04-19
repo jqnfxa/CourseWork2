@@ -36,22 +36,27 @@ Matrix create(int32_t rows, int32_t columns)
 
 Matrix create_filled(int32_t rows, int32_t columns, int32_t color)
 {
-	Matrix matrix = {};
+	Matrix matrix = create(rows, columns);
 
-	if(is_valid_rgb(color))
-	{
-		matrix = create(rows, columns);
-
-		for(int32_t i = 0; i < matrix.height; ++i)
-		{
-			for(int32_t j = 0; j < matrix.width; ++j)
-			{
-				matrix.grid[i][j] = color;
-			}
-		}
-	}
+	fill(&matrix, color);
 
 	return matrix;
+}
+
+void fill(Matrix *matrix, int32_t color)
+{
+	if(matrix == NULL || matrix->grid == NULL || !is_valid_rgb(color))
+	{
+		return;
+	}
+
+	for(int32_t i = 0; i < matrix->height; ++i)
+	{
+		for(int32_t j = 0; j < matrix->width; ++j)
+		{
+			matrix->grid[i][j] = color;
+		}
+	}
 }
 
 void copy_additional(Matrix *dst, Matrix *src, const int32_t *avoid_colors, int32_t size)

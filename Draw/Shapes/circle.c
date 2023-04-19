@@ -44,6 +44,7 @@ void draw_circle(Matrix *matrix, CircleQuery *info)
 		draw_circle_v1(matrix, info->center, info->radius - info->width, 0, info->fill_color);
 	}
 }
+
 void xLine(Matrix *matrix, int32_t x1, int32_t x2, int32_t y, int32_t color)
 {
 	if(matrix == NULL)

@@ -28,7 +28,7 @@ void complete_frame_query(Matrix *matrix, FrameQuery *query)
 	}
 }
 
-void gen_simple_lines(Matrix **src, int frame_width, int color)
+void gen_simple_lines(Matrix **src, int32_t frame_width, int32_t color)
 {
 	if(src == NULL || *src == NULL || (*src)->grid == NULL || !is_valid_rgb(color) || frame_width < 1)
 	{
@@ -44,17 +44,11 @@ void gen_simple_lines(Matrix **src, int frame_width, int color)
 
 	**src = create(matrix.height + 2 * frame_width, matrix.width + 2 * frame_width);
 
-	int inverted_color = invert_color(color);
+	int32_t inverted_color = invert_color(color);
 
-	for(int32_t i = 0; i < (*src)->height; ++i)
-	{
-		for(int32_t j = 0; j < (*src)->width; ++j)
-		{
-			(*src)->grid[i][j] = inverted_color;
-		}
-	}
+	fill(*src, inverted_color);
 
-	int line_width = min(matrix.width, matrix.height) / 100 + frame_width / 25 + 1;
+	int32_t line_width = min(matrix.width, matrix.height) / 100 + frame_width / 25 + 1;
 
 	for(int32_t i = 0; i < (*src)->height + (*src)->width; i += line_width * 2)
 	{
@@ -85,7 +79,7 @@ void gen_simple_lines(Matrix **src, int frame_width, int color)
 	destroy(&matrix);
 }
 
-void gen_simple_circles(Matrix **src, int frame_width, int color)
+void gen_simple_circles(Matrix **src, int32_t frame_width, int32_t color)
 {
 	Matrix matrix = create((*src)->height, (*src)->width);
 
@@ -96,17 +90,11 @@ void gen_simple_circles(Matrix **src, int frame_width, int color)
 
 	**src = create(matrix.height + 2 * frame_width, matrix.width + 2 * frame_width);
 
-	int inverted_color = invert_color(color);
+	int32_t inverted_color = invert_color(color);
 
-	for(int32_t i = 0; i < (*src)->height; ++i)
-	{
-		for(int32_t j = 0; j < (*src)->width; ++j)
-		{
-			(*src)->grid[i][j] = inverted_color;
-		}
-	}
+	fill(*src, inverted_color);
 
-	int radius = (*src)->height / 35 + 1;
+	int32_t radius = (*src)->height / 35 + 1;
 
 	CircleQuery query;
 	query.radius = radius;
