@@ -3,14 +3,10 @@
 #include "../ExceptionHandler/logger.h"
 #include <stdlib.h>
 
-//TODO fix image processing
-
 BMP *load_image(const char *filename)
 {
-	// open file to read
 	FILE *file = fopen(filename, "rb");
 
-	// failed to open file
 	if(file == NULL)
 	{
 		log_error(FILE_OPEN, filename);
@@ -26,7 +22,7 @@ BMP *load_image(const char *filename)
 		goto fail;
 	}
 
-	// check if file prefix is BM
+	// check if file prefix is 'BM'
 	if(bmp->header.bfType != BMP_INDENTIFIER)
 	{
 		log_error(FILE_INVALID, filename);
@@ -40,10 +36,11 @@ BMP *load_image(const char *filename)
 		goto fail;
 	}
 
-	// check the bitmap info. If it is not 24-bit, and uncompressed return false
-	if(bmp->dib_header.biBitCount != 24 ||
+	// check the bitmap info
+	if(bmp->dib_header.biSize != 40 ||
+	   bmp->dib_header.biBitCount != 24 ||
 	   bmp->dib_header.biCompression != 0 ||
-	   (bmp->dib_header.biClrUsed != 0 && bmp->dib_header.biClrImportant != 0))
+	   bmp->dib_header.biPlanes != 1)
 	{
 		log_error(UNSUPPORTED_TYPE, filename);
 		goto fail;
@@ -63,7 +60,7 @@ BMP *load_image(const char *filename)
 	bmp->junk_bytes = (alignment == 0 ? 0 : alignment / bmp->dib_header.biHeight);
 
 	// read pixel matrix
-	read_pixel_matrix(file,bmp->dib_header.biWidth,bmp->dib_header.biHeight, &bmp->matrix,bmp->junk_bytes);
+	read_pixel_matrix(file, bmp->dib_header.biWidth, bmp->dib_header.biHeight, &bmp->matrix, bmp->junk_bytes);
 
 	fclose(file);
 	return bmp;
@@ -73,7 +70,7 @@ fail:
 	return NULL;
 }
 
-BMP *create_image(int width, int height, int color)
+BMP *create_image(int32_t width, int32_t height, int32_t color)
 {
 	BMP *image = malloc(sizeof(BMP));
 
@@ -83,7 +80,7 @@ BMP *create_image(int width, int height, int color)
 		return image;
 	}
 
-	int closest;
+	int32_t closest;
 	for(closest = width * 3; closest % 4 != 0; ++closest) {}
 
 	image->junk_bytes = closest - width * 3;
@@ -100,22 +97,47 @@ BMP *create_image(int width, int height, int color)
 	image->dib_header.biBitCount = 24;
 	image->dib_header.biCompression = 0;
 	image->dib_header.biSizeImage = image->header.bfSize - image->header.bfOffBits;
-	image->dib_header.biXPelsPerMeter = 2835;
-	image->dib_header.biYPelsPerMeter = 2835;
+	image->dib_header.biXPPM = 2835;
+	image->dib_header.biYPPM = 2835;
 	image->dib_header.biClrUsed = 0;
 	image->dib_header.biClrImportant = 0;
 
-	image->matrix = create(height, width);
-
-	for(int i = 0; i < image->matrix.height; ++i)
-	{
-		for(int j = 0; j < image->matrix.width; ++j)
-		{
-			set_pixel(&image->matrix, i, j, color);
-		}
-	}
+	image->matrix = create_filled(height, width, color);
 
 	return image;
+}
+
+void dump_info(FILE *stream, const char *filename)
+{
+	BMP *image = load_image(filename);
+
+	if(image == NULL)
+	{
+		return;
+	}
+
+	fprintf(stream, "Bitmap info header\n");
+	fprintf(stream, "bfType:      %d\n", image->header.bfType);
+	fprintf(stream, "bfSize:      %d\n", image->header.bfSize);
+	fprintf(stream, "bfReserved1: %d\n", image->header.bfReserved1);
+	fprintf(stream, "bfReserved2: %d\n", image->header.bfReserved2);
+	fprintf(stream, "bfReserve2:  %d\n", image->header.bfReserved2);
+	fprintf(stream, "bfOffBits:   %d\n", image->header.bfOffBits);
+	fprintf(stream, "\nBitmap DIB header\n");
+
+	fprintf(stream, "biSize:      %d\n", image->dib_header.biSize);
+	fprintf(stream, "biWidth:     %d\n", image->dib_header.biWidth);
+	fprintf(stream, "biHeight:    %d\n", image->dib_header.biHeight);
+	fprintf(stream, "biPlanes:    %d\n", image->dib_header.biPlanes);
+	fprintf(stream, "biBitCount:  %d\n", image->dib_header.biBitCount);
+	fprintf(stream, "biCompress:  %d\n", image->dib_header.biCompression);
+	fprintf(stream, "biSizeImage: %d\n", image->dib_header.biSizeImage);
+	fprintf(stream, "biXPPM:      %d\n", image->dib_header.biXPPM);
+	fprintf(stream, "biYPPM:      %d\n", image->dib_header.biYPPM);
+	fprintf(stream, "biClrUsed:   %d\n", image->dib_header.biClrUsed);
+	fprintf(stream, "biImportant: %d\n", image->dib_header.biClrImportant);
+
+	safe_free_bmp(&image);
 }
 
 bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix, uint32_t alignment)
@@ -152,7 +174,7 @@ bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix
 			}
 		}
 
-		// When scan line is completed we need to skip the junk bytes
+		// skip the junk bytes
 		fseek(file, alignment, SEEK_CUR);
 	}
 
@@ -170,9 +192,9 @@ bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 	char empty_byte = 0;
 
 	// we need to write scan lines
-	for(int i = (int)matrix->height - 1; i >= 0; i--)
+	for(int32_t i = matrix->height - 1; i >= 0; i--)
 	{
-		for(int j = 0; j < matrix->width; ++j)
+		for(int32_t j = 0; j < matrix->width; ++j)
 		{
 			pixel = int_to_rgb(matrix->grid[i][j]);
 			if(!fwrite(&pixel, sizeof(RGB), 1, file))
@@ -183,7 +205,7 @@ bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 		}
 
 		// add junk bytes if required
-		if(alignment != 0 && !fwrite(&empty_byte, sizeof(char), alignment, file))
+		if(!fwrite(&empty_byte, sizeof(char), alignment, file))
 		{
 			return false;
 		}
@@ -199,27 +221,16 @@ void resize_image(BMP *image)
 		return;
 	}
 
-	int closest;
+	int32_t closest;
 	for(closest = image->matrix.width * 3; closest % 4 != 0; ++closest) {}
 
 	image->junk_bytes = closest - image->matrix.width * 3;
-	image->header.bfType = BMP_INDENTIFIER;
-	image->header.bfSize = image->junk_bytes * image->matrix.height + 3 * image->matrix.width * image->matrix.height + 54;
-	image->header.bfReserved1 = 0;
-	image->header.bfReserved2 = 0;
-	image->header.bfOffBits = 54;
 
-	image->dib_header.biSize = 40;
+	image->header.bfSize = image->junk_bytes * image->matrix.height + 3 * image->matrix.width * image->matrix.height + image->header.bfOffBits;
+
 	image->dib_header.biWidth = image->matrix.width;
 	image->dib_header.biHeight = image->matrix.height;
-	image->dib_header.biPlanes = 1;
-	image->dib_header.biBitCount = 24;
-	image->dib_header.biCompression = 0;
 	image->dib_header.biSizeImage = image->header.bfSize - image->header.bfOffBits;
-	image->dib_header.biXPelsPerMeter = 2835;
-	image->dib_header.biYPelsPerMeter = 2835;
-	image->dib_header.biClrUsed = 0;
-	image->dib_header.biClrImportant = 0;
 }
 
 bool unload_image(const char *filename, BMP *picture)

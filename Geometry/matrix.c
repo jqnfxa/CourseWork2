@@ -1,5 +1,6 @@
 #include "matrix.h"
 #include "../ExceptionHandler/logger.h"
+#include "../Validator/validator.h"
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -33,7 +34,27 @@ Matrix create(int32_t rows, int32_t columns)
 	return matrix;
 }
 
-void copy_additional(Matrix *dst, Matrix *src, const int *avoid_colors, int size)
+Matrix create_filled(int32_t rows, int32_t columns, int32_t color)
+{
+	Matrix matrix = {};
+
+	if(is_valid_rgb(color))
+	{
+		matrix = create(rows, columns);
+
+		for(int32_t i = 0; i < matrix.height; ++i)
+		{
+			for(int32_t j = 0; j < matrix.width; ++j)
+			{
+				matrix.grid[i][j] = color;
+			}
+		}
+	}
+
+	return matrix;
+}
+
+void copy_additional(Matrix *dst, Matrix *src, const int32_t *avoid_colors, int32_t size)
 {
 	if(dst == NULL || src == NULL ||
 	   dst->height != src->height || dst->width != src->width ||

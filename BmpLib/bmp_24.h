@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-
 ;
+
 #pragma pack(push, 1)
 
 typedef struct tagBITMAPFILEHEADER {
@@ -25,8 +25,8 @@ typedef struct tagBITMAPINFOHEADER {
 	uint16_t biBitCount;
 	uint32_t biCompression;
 	uint32_t biSizeImage;
-	uint32_t biXPelsPerMeter;
-	uint32_t biYPelsPerMeter;
+	uint32_t biXPPM;
+	uint32_t biYPPM;
 	uint32_t biClrUsed;
 	uint32_t biClrImportant;
 } BITMAPINFOHEADER;
