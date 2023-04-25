@@ -1,5 +1,6 @@
 #include "rotate.h"
 #include "image.h"
+#include "../Validator/validator.h"
 #include <math.h>
 #include <stddef.h>
 
@@ -7,7 +8,7 @@ Matrix rotate_advanced(Matrix *matrix, double angle);
 
 void rotate_area(Matrix *matrix, RotateQuery *info)
 {
-	if(matrix == NULL || info == NULL)
+	if(!is_valid_matrix(matrix) || info == NULL)
 	{
 		return;
 	}

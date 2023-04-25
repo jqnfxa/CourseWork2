@@ -71,12 +71,12 @@ bool parse_rotate_query(int32_t argc, char *argv[], char *file_name, RotateQuery
 
 	if(optind >= argc || !is_valid_bmp(argv[optind]))
 	{
-		log_error(TOO_FEW_ARGUMENTS, " for rotate");
+		log_error(TOO_FEW_ARGUMENTS, "for rotate");
 		return false;
 	}
 	if(!validate_rotate(query))
 	{
-		log_error(INPUT_INVALID, " for rotate");
+		log_error(INPUT_INVALID, "for rotate");
 		return false;
 	}
 

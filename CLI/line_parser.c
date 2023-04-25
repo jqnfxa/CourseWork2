@@ -71,7 +71,7 @@ bool parse_line_query(int32_t argc, char *argv[], char *file_name, LineQuery *qu
 
 	if(optind >= argc || !is_valid_bmp(argv[optind]))
 	{
-		log_error(TOO_FEW_ARGUMENTS, " for line");
+		log_error(TOO_FEW_ARGUMENTS, "for line");
 		return false;
 	}
 	if(!validate_line(query))

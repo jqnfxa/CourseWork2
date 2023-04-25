@@ -312,7 +312,7 @@ bool dump_dib_header(FILE *stream, FILE *file)
 
 bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix, uint32_t alignment)
 {
-	if(file == NULL || !is_valid_matrix(matrix))
+	if(file == NULL || matrix == NULL)
 	{
 		return false;
 	}
