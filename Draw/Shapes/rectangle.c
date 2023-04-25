@@ -5,7 +5,7 @@
 
 void draw_rectangle(Matrix *matrix, RectangleQuery *info)
 {
-	if(matrix == NULL || info == NULL)
+	if(!is_valid_matrix(matrix) || info == NULL)
 	{
 		return;
 	}
@@ -64,7 +64,7 @@ void draw_rectangle(Matrix *matrix, RectangleQuery *info)
 
 void draw_filled_rectangle(Matrix *matrix, Area *area, int32_t color)
 {
-	if(matrix == NULL || !validate_area(area))
+	if(!is_valid_matrix(matrix) || !validate_area(area))
 	{
 		return;
 	}

@@ -4,7 +4,6 @@
 #include "../Draw/Shapes/rectangle.h"
 #include "../Draw/frame.h"
 #include "../Draw/rotate.h"
-#include "../BmpLib/bmp_parser.h"
 #include "../ExceptionHandler/logger.h"
 #include "../Validator/validator.h"
 #include <stddef.h>

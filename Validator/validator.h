@@ -12,6 +12,7 @@ bool match_flags(int32_t value, int32_t flags);
 void set_flags(int32_t *value, int32_t flags);
 
 void shrink_to_fit(int32_t width, int32_t height, Area *area);
+bool is_valid_matrix(Matrix *matrix);
 bool is_in_bound(Matrix *matrix, Point *position);
 bool is_valid_rgb(int32_t color);
 bool validate_area(Area *area);

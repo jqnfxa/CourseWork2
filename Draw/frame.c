@@ -7,7 +7,7 @@
 
 void complete_frame_query(Matrix *matrix, FrameQuery *query)
 {
-	if(matrix == NULL || matrix->grid == NULL || query == NULL)
+	if(!is_valid_matrix(matrix) || matrix->grid == NULL || query == NULL)
 	{
 		return;
 	}

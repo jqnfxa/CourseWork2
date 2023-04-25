@@ -45,7 +45,7 @@ Matrix create_filled(int32_t rows, int32_t columns, int32_t color)
 
 void fill(Matrix *matrix, int32_t color)
 {
-	if(matrix == NULL || matrix->grid == NULL || !is_valid_rgb(color))
+	if(!is_valid_matrix(matrix) || matrix->grid == NULL || !is_valid_rgb(color))
 	{
 		return;
 	}
@@ -93,7 +93,7 @@ void copy_additional(Matrix *dst, Matrix *src, const int32_t *avoid_colors, int3
 
 void destroy(Matrix *matrix)
 {
-	if(matrix == NULL)
+	if(!is_valid_matrix(matrix))
 	{
 		return;
 	}
@@ -110,7 +110,7 @@ void destroy(Matrix *matrix)
 
 Matrix transpose(Matrix *matrix)
 {
-	if(matrix == NULL)
+	if(!is_valid_matrix(matrix))
 	{
 		return (Matrix){};
 	}
@@ -143,7 +143,7 @@ Matrix rotate_right(Matrix matrix)
 
 void rotate_180(Matrix *matrix)
 {
-	if(matrix == NULL)
+	if(!is_valid_matrix(matrix))
 	{
 		return;
 	}
@@ -153,7 +153,7 @@ void rotate_180(Matrix *matrix)
 
 void flip_horizontal(Matrix *matrix)
 {
-	if(matrix == NULL || matrix->height == 0)
+	if(!is_valid_matrix(matrix) || matrix->height == 0)
 	{
 		return;
 	}
@@ -168,7 +168,7 @@ void flip_horizontal(Matrix *matrix)
 
 void flip_vertical(Matrix *matrix)
 {
-	if(matrix == NULL || matrix->width == 0)
+	if(!is_valid_matrix(matrix) || matrix->width == 0)
 	{
 		return;
 	}

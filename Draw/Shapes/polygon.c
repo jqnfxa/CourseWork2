@@ -31,7 +31,7 @@ int32_t draw_elementary_polygon(Matrix *matrix, int32_t count, int32_t *xy, int3
  */
 void draw_line(Matrix *matrix, LineQuery *info)
 {
-	if(matrix == NULL || info == NULL)
+	if(!is_valid_matrix(matrix) || info == NULL)
 	{
 		return;
 	}
@@ -48,7 +48,7 @@ void draw_line(Matrix *matrix, LineQuery *info)
 
 void draw_polygon(Matrix *matrix, PolygonQuery *info)
 {
-	if(matrix == NULL || info == NULL)
+	if(!is_valid_matrix(matrix) || info == NULL)
 	{
 		return;
 	}

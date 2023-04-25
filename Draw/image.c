@@ -5,7 +5,7 @@
 
 Matrix crop(Matrix *matrix, Area *area)
 {
-	if(matrix == NULL || !validate_area(area) || !validate_image_area(matrix->width, matrix->height, area))
+	if(!is_valid_matrix(matrix) || !validate_area(area) || !validate_image_area(matrix->width, matrix->height, area))
 	{
 		return (Matrix){};
 	}
@@ -44,6 +44,27 @@ void paste(Matrix *dst, Matrix *src, Point *left_up)
 		for(int32_t j = 0, x = left_up->x; j < src->width; ++j, ++x)
 		{
 			set_pixel(dst, x, y, src->grid[i][j]);
+		}
+	}
+}
+
+void paste_if(Matrix *dst, Matrix *src, Point *left_up, int32_t skip_color)
+{
+	if(dst == NULL || src == NULL || left_up == NULL ||
+	   left_up->x >= dst->width || left_up->y >= dst->height ||
+	   left_up->y + src->height < 0 || left_up->x + src->width < 0)
+	{
+		return;
+	}
+
+	for(int32_t i = 0, y = left_up->y; i < src->height; ++i, ++y)
+	{
+		for(int32_t j = 0, x = left_up->x; j < src->width; ++j, ++x)
+		{
+			if(src->grid[i][j] != skip_color)
+			{
+				set_pixel(dst, x, y, src->grid[i][j]);
+			}
 		}
 	}
 }

@@ -5,6 +5,7 @@
 
 Matrix crop(Matrix *matrix, Area *area);
 void paste(Matrix *dst, Matrix *src, Point *left_up);
+void paste_if(Matrix *dst, Matrix *src, Point *left_up, int32_t skip_color);
 void set_pixel(Matrix *matrix, int32_t x, int32_t y, int32_t color);
 void set_pixel_avoid(Matrix *matrix, int32_t x, int32_t y, int32_t color, int32_t danger_color);
 bool is_in_bound(Matrix *matrix, Point *position);

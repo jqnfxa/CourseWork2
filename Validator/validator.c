@@ -59,9 +59,18 @@ void shrink_to_fit(int32_t width, int32_t height, Area *area)
 	}
 }
 
+bool is_valid_matrix(Matrix *matrix)
+{
+	if(matrix == NULL || matrix->grid == NULL || matrix->width <= 0 || matrix->height <= 0)
+	{
+		return false;
+	}
+	return true;
+}
+
 bool is_in_bound(Matrix *matrix, Point *position)
 {
-	if(matrix == NULL || position == NULL)
+	if(!is_valid_matrix(matrix) || position == NULL)
 	{
 		return false;
 	}
@@ -373,9 +382,9 @@ bool validate_rotate(RotateQuery *query)
 	}
 	else
 	{
-		if(query->angle != 90 && query->angle != 180 && query->angle != 270)
+		if(query->angle < 0)
 		{
-			log_error(CONVERSATION, "--angle must be 90 | 180 | 270");
+			log_error(CONVERSATION, "--angle must be more non negative");
 			return false;
 		}
 	}

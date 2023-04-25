@@ -6,7 +6,7 @@
 //TODO small circle ( < 9*9) precision?
 void draw_circle(Matrix *matrix, CircleQuery *info)
 {
-	if(matrix == NULL || info == NULL)
+	if(!is_valid_matrix(matrix) || info == NULL)
 	{
 		return;
 	}
@@ -47,7 +47,7 @@ void draw_circle(Matrix *matrix, CircleQuery *info)
 
 void xLine(Matrix *matrix, int32_t x1, int32_t x2, int32_t y, int32_t color)
 {
-	if(matrix == NULL)
+	if(!is_valid_matrix(matrix))
 	{
 		return;
 	}
@@ -60,7 +60,7 @@ void xLine(Matrix *matrix, int32_t x1, int32_t x2, int32_t y, int32_t color)
 
 void yLine(Matrix *matrix, int32_t x, int32_t y1, int32_t y2, int32_t color)
 {
-	if(matrix == NULL)
+	if(!is_valid_matrix(matrix))
 	{
 		return;
 	}
@@ -73,7 +73,7 @@ void yLine(Matrix *matrix, int32_t x, int32_t y1, int32_t y2, int32_t color)
 
 void draw_circle_v1(Matrix *matrix, Point center, int32_t outer, int32_t inner, int32_t color)
 {
-	if(matrix == NULL)
+	if(!is_valid_matrix(matrix))
 	{
 		return;
 	}

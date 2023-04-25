@@ -71,7 +71,7 @@ bool parse_polygon_query(int32_t argc, char *argv[], char *file_name, PolygonQue
 
 	if(optind >= argc || !is_valid_bmp(argv[optind]))
 	{
-		log_error(TOO_FEW_ARGUMENTS, " for rectangle");
+		log_error(TOO_FEW_ARGUMENTS, "for polygon");
 		return false;
 	}
 	if(!validate_polygon(query))

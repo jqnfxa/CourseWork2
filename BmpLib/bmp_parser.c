@@ -1,6 +1,7 @@
 #include "bmp_parser.h"
 #include "../Draw/image.h"
 #include "../ExceptionHandler/logger.h"
+#include "../Validator/validator.h"
 #include <stdlib.h>
 
 const char *CompressionStrings[14] = {
@@ -169,7 +170,7 @@ bool dump_info_header(FILE *stream, FILE *file)
 	}
 
 	fprintf(stream, "Bitmap info header\n");
-	fprintf(stream, "bfType:      0x%x\n", file_header.bfType, file_header.bfType);
+	fprintf(stream, "bfType:      0x%x\n", file_header.bfType);
 	fprintf(stream, "bfSize:      %d\n", file_header.bfSize);
 	fprintf(stream, "bfReserved1: %d\n", file_header.bfReserved1);
 	fprintf(stream, "bfReserved2: %d\n", file_header.bfReserved2);
@@ -311,7 +312,7 @@ bool dump_dib_header(FILE *stream, FILE *file)
 
 bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix, uint32_t alignment)
 {
-	if(file == NULL || matrix == NULL)
+	if(file == NULL || !is_valid_matrix(matrix))
 	{
 		return false;
 	}
@@ -352,7 +353,7 @@ bool read_pixel_matrix(FILE *file, int32_t width, int32_t height, Matrix *matrix
 
 bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 {
-	if(file == NULL || matrix == NULL)
+	if(file == NULL || !is_valid_matrix(matrix))
 	{
 		return false;
 	}
@@ -374,7 +375,7 @@ bool write_pixel_matrix(FILE *file, Matrix *matrix, uint32_t alignment)
 		}
 
 		// add junk bytes if required
-		if(fwrite(&empty_byte, sizeof(char), alignment, file) != alignment)
+		if(alignment != 0 && fwrite(&empty_byte, sizeof(char), alignment, file) != alignment)
 		{
 			return false;
 		}
