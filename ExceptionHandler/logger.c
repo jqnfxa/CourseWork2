@@ -96,7 +96,7 @@ const char *hint =
 	"\t\n"
 	"\t\t-d, --direction dir            (optional) direction to rotate can be 'left' or 'right' (default is left)\n"
 	"\t\t\n"
-	"\t\t-a, --angle angle              rotating angle must be non negative\n"
+	"\t\t-a, --angle angle              angle to rotate (can be any)\n"
 	"\t\t\n"
 	"\t\t-s, --start x,y                set the upper left corner of area\n"
 	"\t\t\n"

@@ -380,14 +380,6 @@ bool validate_rotate(RotateQuery *query)
 		log_error(MISSING_ARGUMENT, "--angle");
 		return false;
 	}
-	else
-	{
-		if(query->angle < 0)
-		{
-			log_error(CONVERSATION, "--angle must be more non negative");
-			return false;
-		}
-	}
 
 	// check direction
 	if(query->direction == INVALID)

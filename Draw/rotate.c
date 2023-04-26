@@ -13,6 +13,12 @@ void rotate_area(Matrix *matrix, RotateQuery *info)
 		return;
 	}
 
+	if(info->angle < 0)
+	{
+		info->angle *= -1;
+		info->direction = (info->direction == LEFT ? RIGHT : LEFT);
+	}
+
 	info->angle %= 360;
 
 	if(info->angle == 0)
