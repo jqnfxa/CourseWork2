@@ -62,14 +62,17 @@ bool parse_int(const char *argument, int32_t *val, const char *option_name, int3
 		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
-	*val = (int32_t)strtol(argument, NULL, base);
 
-	if(errno == EINVAL || errno == ERANGE)
+	char *ptr = "\0";
+	int64_t tmp = strtol(argument, &ptr, base);
+
+	if(strcmp(ptr, "\0") != 0 || errno == EINVAL || errno == ERANGE || tmp > INT32_MAX || tmp < INT32_MIN)
 	{
 		log_error(CONVERSATION, option_name);
 		return false;
 	}
 
+	*val = (int32_t)strtol(argument, NULL, base);
 	return true;
 }
 
@@ -178,7 +181,7 @@ bool parse_points(const char *argument, int32_t **arr, int32_t *count, const cha
 
 	if(*count < 3)
 	{
-		log_error(TOO_FEW_ARGUMENTS, "to form polygon");
+		log_error(WRONG_ARGUMENT_NUMBER, "to form polygon");
 
 		free(*arr);
 		*arr = NULL;

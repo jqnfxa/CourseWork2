@@ -27,35 +27,35 @@ bool parse_line_query(int32_t argc, char *argv[], char *file_name, LineQuery *qu
 		switch(operation)
 		{
 			case 's':
-				if(!parse_point_values(optarg, &query->start, long_options[operation_index].name))
+				if(!parse_point_values(optarg, &query->start, long_options[0].name))
 				{
 					return false;
 				}
 				set_flags(&query->check_sum, START_POINT);
 				break;
 			case 'e':
-				if(!parse_point_values(optarg, &query->end, long_options[operation_index].name))
+				if(!parse_point_values(optarg, &query->end, long_options[1].name))
 				{
 					return false;
 				}
 				set_flags(&query->check_sum, END_POINT);
 				break;
 			case 'w':
-				if(!parse_int(optarg, &query->width, long_options[operation_index].name, 10))
+				if(!parse_int(optarg, &query->width, long_options[2].name, 10))
 				{
 					return false;
 				}
 				set_flags(&query->check_sum, WIDTH);
 				break;
 			case 'c':
-				if(!parse_color(optarg, &query->color, long_options[operation_index].name))
+				if(!parse_color(optarg, &query->color, long_options[3].name))
 				{
 					return false;
 				}
 				set_flags(&query->check_sum, COLOR);
 				break;
 			case 'n':
-				if(!parse_file_name(optarg, query->new_file, long_options[operation_index].name))
+				if(!parse_file_name(optarg, query->new_file, long_options[4].name))
 				{
 					return false;
 				}
@@ -69,9 +69,14 @@ bool parse_line_query(int32_t argc, char *argv[], char *file_name, LineQuery *qu
 		}
 	}
 
-	if(optind >= argc || !is_valid_bmp(argv[optind]))
+	if(optind >= argc)
 	{
-		log_error(TOO_FEW_ARGUMENTS, "for line");
+		log_error(WRONG_ARGUMENT_NUMBER, "for line");
+		return false;
+	}
+	if(!is_valid_bmp(argv[optind]))
+	{
+		log_error(FILE_OPEN, argv[optind]);
 		return false;
 	}
 	if(!validate_line(query))

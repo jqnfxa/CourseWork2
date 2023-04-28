@@ -2,13 +2,13 @@
 #include "CLI/command_parser.h"
 #include "ExceptionHandler/logger.h"
 #include <stdio.h>
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
 	char file_to_process[256];
 
 	enum OPERATION_TYPE query_idx = parse_user_command(argc, argv);
-
 	if(query_idx == PRINT_INFO)
 	{
 		dump_info(stdout, optarg);
@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
 		{
 			log_error(INVALID_QUERY, "");
 		}
+
 		free_query(query_idx, query);
 	}
 	return 0;

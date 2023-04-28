@@ -54,6 +54,7 @@ void rotate_area(Matrix *matrix, RotateQuery *info)
 	else
 	{
 		int angle;
+		Matrix area_to_rotate = crop(matrix, &info->area);
 
 		if(info->angle < 90)
 		{
@@ -61,10 +62,7 @@ void rotate_area(Matrix *matrix, RotateQuery *info)
 		}
 		else if(info->angle < 270)
 		{
-			Matrix sub = crop(matrix, &info->area);
-			rotate_180(&sub);
-			paste(matrix, &sub, &info->area.left_up);
-			destroy(&sub);
+			rotate_180(&area_to_rotate);
 
 			angle = (180 - info->angle) * (info->direction == LEFT ? 1 : -1);
 		}
@@ -73,7 +71,6 @@ void rotate_area(Matrix *matrix, RotateQuery *info)
 			angle = (360 - info->angle) * (info->direction == LEFT ? 1 : -1);
 		}
 
-		Matrix area_to_rotate = crop(matrix, &info->area);
 		Matrix rotated = rotate_advanced(&area_to_rotate, angle * (M_PI / 180));
 
 		Point pp = {(info->area.right_bottom.x + info->area.left_up.x) / 2 -  rotated.width / 2,
