@@ -225,7 +225,7 @@ int16_t get_circle_type(CircleQuery *request)
 			return 2;
 		}
 	}
-	else
+	else if(match_flags(request->check_sum, POINT | RADIUS))
 	{
 		// we got area ?
 		if(match_flags(request->check_sum, START_POINT) || match_flags(request->check_sum, END_POINT))
@@ -251,14 +251,29 @@ bool validate_circle(CircleQuery *query)
 	switch(get_circle_type(query))
 	{
 		case 1: {
+			if(!match_flags(query->check_sum, RADIUS))
+			{
+				log_error(MISSING_ARGUMENT, "--radius");
+				return false;
+			}
 			if(query->radius < 0)
 			{
 				log_error(CONVERSATION, "--radius");
 				return false;
 			}
+			if(!match_flags(query->check_sum, POINT))
+			{
+				log_error(MISSING_ARGUMENT, "--point");
+				return false;
+			}
 		}
 		break;
 		case 2: {
+			if(!match_flags(query->check_sum, START_POINT) || !match_flags(query->check_sum, END_POINT))
+			{
+				log_error(MISSING_ARGUMENT, "--start | --end");
+				return false;
+			}
 			if(!validate_area(&query->area))
 			{
 				log_error(CONVERSATION, "--start | --end");
@@ -268,7 +283,7 @@ bool validate_circle(CircleQuery *query)
 		break;
 		case 0:
 		default:
-			log_error(MISSING_ARGUMENT, "--circle");
+			log_error(MISSING_ARGUMENT, "placement type");
 			return false;
 	}
 

@@ -1,23 +1,15 @@
 #include "ellipse.h"
 #include "../../Validator/validator.h"
 #include "../image.h"
-#include <math.h>
 #include <stdlib.h>
+#include <stdint.h>
 
-void draw_generic_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, bool filled)
+void brezenham_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, bool filled)
 {
 	int32_t a = abs(x1 - x0), b = abs(y1 - y0), b1 = b & 1;   /* values of diameter */
 	long dx = 4 * (1 - a) * b * b, dy = 4 * (b1 + 1) * a * a;  /* error increment */
 	long err = dx + dy + b1 * a * a, e2;                      /* error of 1.step */
 
-	if(x0 > x1)
-	{
-		x0 = x1;
-		x1 += a;
-	}
-	/* if called with swapped points */
-	if(y0 > y1)
-		y0 = y1; /* .. exchange them */
 	y0 += (b + 1) / 2;
 	y1 = y0 - b1; /* starting pixel */
 	a *= 8 * a;
@@ -68,6 +60,73 @@ void draw_generic_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, in
 			set_pixel(matrix, x0 - 1, y1, color);
 			set_pixel(matrix, x1 + 1, y1--, color);
 		}
+	}
+}
+
+void mid_point_ellipse(Matrix *matrix, int32_t xc, int32_t yc, int32_t rx, int32_t ry, int32_t color, bool filled)
+{
+	int Yr = -ry;
+	long long int Acc = -1 ;
+	long long int Rx2 = rx * rx;
+	long long int Ry2 = ry * ry;
+
+	// Parse the first quadrant (trigonometric, so top-right quadrant).
+	for (int Xr = 0 ; Xr <= rx; ++Xr)
+	{
+		// Plot horizontally, use the 4 possible symmetries.
+		if(filled)
+		{
+			xLine(matrix, xc - Xr, xc + Xr, yc + Yr, color);
+			xLine(matrix, xc - Xr, xc + Xr, yc - Yr, color);
+		}
+		else
+		{
+			set_pixel(matrix, xc + Xr, yc + Yr, color);
+			set_pixel(matrix, xc - Xr, yc + Yr, color);
+			set_pixel(matrix, xc + Xr, yc - Yr, color);
+			set_pixel(matrix, xc - Xr, yc - Yr, color);
+		}
+
+		// Add to accumulator only the delta part
+		Acc += 2 * Xr + 1 ;
+		// Test for a vertical "line", otherwise ellipse may not be complete.
+		// Do that either until we finished ellipse (Yr<0), or if we deviate too much (Acc>0).
+		while ((Acc > 0) && (Yr < 0))
+		{
+			// Start to plot vertically. Often reduced to one only pixel.
+			++Yr;
+			// Here: can draw an horizontal line from (X-Xr+1) to (X+Xr-1), line (Y+Yr).
+			// Color can be different from color used for border.
+
+			if(filled)
+			{
+				xLine(matrix, xc - Xr, xc + Xr, yc + Yr, color);
+				xLine(matrix, xc - Xr, xc + Xr, yc - Yr, color);
+			}
+			else
+			{
+				set_pixel(matrix, xc + Xr, yc + Yr, color);
+				set_pixel(matrix, xc - Xr, yc + Yr, color);
+				set_pixel(matrix, xc + Xr, yc - Yr, color);
+				set_pixel(matrix, xc - Xr, yc - Yr, color);
+			}
+			// Compute deviation.
+			Acc += (Rx2*(2*Yr + 1)) / Ry2 ;
+		}
+	}
+}
+
+void draw_generic_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, bool filled)
+{
+	int32_t max_dx = max(x1 - x0, y1 - y0);
+
+	if(max_dx > 500)
+	{
+		mid_point_ellipse(matrix, x0 + (x1 - x0) / 2, y0 + (y1 - y0) / 2, (x1 - x0) / 2, (y1 - y0) / 2, color, filled);
+	}
+	else
+	{
+		brezenham_ellipse(matrix, x0, y0, x1, y1, color, filled);
 	}
 }
 
