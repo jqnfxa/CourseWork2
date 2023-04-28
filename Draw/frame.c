@@ -1,8 +1,10 @@
 #include "frame.h"
 #include "../Geometry/matrix.h"
 #include "../Validator/validator.h"
-#include "Shapes/circle.h"
+#include "Shapes/ellipse.h"
+#include "Shapes/polygon.h"
 #include "image.h"
+#include <math.h>
 #include <string.h>
 
 void complete_frame_query(Matrix *matrix, FrameQuery *query)
@@ -94,50 +96,39 @@ void gen_simple_circles(Matrix **src, int32_t frame_width, int32_t color)
 
 	fill(*src, inverted_color);
 
-	int32_t radius = (*src)->height / 35 + 1;
+	int32_t y0 = 0;
+	int32_t y1 = (*src)->height;
+	int32_t x0 = 0;
+	int32_t x1 = (*src)->width;
 
-	CircleQuery query;
-	query.radius = radius;
-	query.width = radius / 10 + 1;
-	query.color = color;
-	query.check_sum = 0;
-	set_flags(&query.check_sum, POINT | RADIUS | WIDTH | COLOR);
+	int32_t y_step = ceil((y1 - y0) * 1.0 / 27);
+	int32_t x_step = ceil((x1 - x0) * 1.0 / 27);
 
-	for(int32_t y = 0; y < (*src)->height + (*src)->width; y += 8 * radius)
+	int width = ceil((y_step + x_step) * 1.0 / 15);
+
+	for(int32_t y = y0; y < y1 + y_step; y += y_step * 3)
 	{
-		for(int32_t x = 0; x < (*src)->width + (*src)->width; x += 8 * radius)
+		for(int32_t x = x0; x < x1 + x_step; x += x_step * 3)
 		{
-			query.center.x = x;
-			query.center.y = y;
-
-			draw_circle(*src, &query);
+			draw_wide_ellipse(*src, x - x_step, y - y_step, x + x_step, y + y_step, width, color);
 		}
 	}
 
-	query.radius /= 2;
-	query.radius++;
-
-	for(int32_t y = 0; y < (*src)->height + (*src)->width; y += 4 * radius)
+	for(int32_t y = ceil((y0 + y_step) * 1.5); y < y1 + y_step; y += y_step * 3)
 	{
-		for(int32_t x = 0; x < (*src)->width + (*src)->width; x += 4 * radius)
+		for(int32_t x = ceil((x0 + x_step) * 1.5); x < x1 + x_step; x += x_step * 3)
 		{
-			query.center.x = x;
-			query.center.y = y;
-
-			draw_circle(*src, &query);
+			draw_wide_ellipse(*src, x - 2 * x_step, y - 2 * y_step, x + 2 * x_step, y + 2 * y_step, width, color);
 		}
 	}
 
-	query.radius *= 4;
-
-	for(int32_t y = 0; y < (*src)->height + (*src)->width; y += 2 * radius)
+	for(int32_t y = ceil((y0 + y_step) * 1.5); y < y1 + y_step; y += y_step * 3)
 	{
-		for(int32_t x = 0; x < (*src)->width + (*src)->width; x += 2 * radius)
+		for(int32_t x = ceil((x0 + x_step) * 1.5); x < x1 + x_step; x += x_step * 3)
 		{
-			query.center.x = x;
-			query.center.y = y;
-
-			draw_circle(*src, &query);
+			draw_wide_line(*src, x0, y, x1, y, color, width, -1);
+			draw_wide_line(*src, x, y0, x, y1, color, width, -1);
+			draw_wide_ellipse(*src, x - x_step, y - y_step, x + x_step, y + y_step, width, color);
 		}
 	}
 

@@ -251,7 +251,7 @@ bool validate_circle(CircleQuery *query)
 	switch(get_circle_type(query))
 	{
 		case 1: {
-			if(query->radius <= 0)
+			if(query->radius < 0)
 			{
 				log_error(CONVERSATION, "--radius");
 				return false;
@@ -259,7 +259,7 @@ bool validate_circle(CircleQuery *query)
 		}
 		break;
 		case 2: {
-			if(!is_square_area(&query->area))
+			if(!validate_area(&query->area))
 			{
 				log_error(CONVERSATION, "--start | --end");
 				return false;

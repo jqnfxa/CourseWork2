@@ -25,28 +25,28 @@ bool parse_frame_query(int32_t argc, char *argv[], char *file_name, FrameQuery *
 		switch(operation)
 		{
 			case 't':
-				if(!parse_int(optarg, &query->type, long_options[operation_index].name, 10))
+				if(!parse_int(optarg, &query->type, long_options[0].name, 10))
 				{
 					return false;
 				}
 				set_flags(&query->check_sum, FRAME_TYPE);
 				break;
 			case 'c':
-				if(!parse_color(optarg, &query->color, long_options[operation_index].name))
+				if(!parse_color(optarg, &query->color, long_options[1].name))
 				{
 					return false;
 				}
 				set_flags(&query->check_sum, COLOR);
 				break;
 			case 'w':
-				if(!parse_int(optarg, &query->width, long_options[operation_index].name, 10))
+				if(!parse_int(optarg, &query->width, long_options[2].name, 10))
 				{
 					return false;
 				}
 				set_flags(&query->check_sum, WIDTH);
 				break;
 			case 'n':
-				if(!parse_file_name(optarg, query->new_file, long_options[operation_index].name))
+				if(!parse_file_name(optarg, query->new_file, long_options[3].name))
 				{
 					return false;
 				}
@@ -60,14 +60,18 @@ bool parse_frame_query(int32_t argc, char *argv[], char *file_name, FrameQuery *
 		}
 	}
 
-	if(optind >= argc || !is_valid_bmp(argv[optind]))
+	if(optind >= argc)
 	{
-		log_error(TOO_FEW_ARGUMENTS, "for frame");
+		log_error(WRONG_ARGUMENT_NUMBER, "for frame");
+		return false;
+	}
+	if(!is_valid_bmp(argv[optind]))
+	{
+		log_error(FILE_OPEN, argv[optind]);
 		return false;
 	}
 	if(!validate_frame(query))
 	{
-		log_error(INPUT_INVALID, "for frame");
 		return false;
 	}
 

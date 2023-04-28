@@ -9,9 +9,9 @@ const char *error_messages[] = {
 	"Failed to process file: file is not bmp or damaged",
 	"Failed to process file: unsupported type",
 	"The program has run out of memory",
-	"Failed to validate query: too few arguments",
+	"Failed to validate query: wrong arguments number",
 	"Failed to validate query: invalid input",
-	"Failed to validate query: missing argument",
+	"Failed to validate query: missing argument for",
 	"Failed to convert",
 	"Failed to validate query: ambiguous call",
 	"Failed to validate query: wrong arguments"
@@ -73,6 +73,7 @@ const char *hint =
 	"\t\n"
 	"\tWarning: circle can be specified only with rectangle or with point and radius \n"
 	"\t[i.e. -s and -e or -p and -r can be used at time]\n"
+	"\t Note: if specified rectangle is not square then ellipse will be drawn\n"
 	"\t\n"
 	"\t\t-s, --start x,y                upper left corner of the rectangle into which the circle will be inscribed\n"
 	"\t\t\n"
@@ -96,7 +97,7 @@ const char *hint =
 	"\t\n"
 	"\t\t-d, --direction dir            (optional) direction to rotate can be 'left' or 'right' (default is left)\n"
 	"\t\t\n"
-	"\t\t-a, --angle angle              angle to rotate (can be any)\n"
+	"\t\t-a, --angle angle              angle to rotate\n"
 	"\t\t\n"
 	"\t\t-s, --start x,y                set the upper left corner of area\n"
 	"\t\t\n"
