@@ -23,18 +23,25 @@ int main(int argc, char *argv[])
 
 		if(QueryFunctions[query_idx](argc, argv, file_to_process, query))
 		{
-			BMP *image = load_image(file_to_process);
-
-			if(image != NULL)
+			if(query_idx == CREATE_CANVAS)
 			{
-				TaskFunctions[query_idx](&image->matrix, query);
+				TaskFunctions[query_idx](NULL, query);
+			}
+			else
+			{
+				BMP *image = load_image(file_to_process);
 
-				(void)resize_image(image);
-				(void)get_file_to_unload(query_idx, query, file_to_process);
+				if(image != NULL)
+				{
+					TaskFunctions[query_idx](&image->matrix, query);
 
-				unload_image(file_to_process, image);
+					(void)resize_image(image);
+					(void)get_file_to_unload(query_idx, query, file_to_process);
 
-				safe_free_bmp(&image);
+					unload_image(file_to_process, image);
+
+					safe_free_bmp(&image);
+				}
 			}
 		}
 		else

@@ -1,6 +1,7 @@
 #include "image.h"
 #include "../ExceptionHandler/logger.h"
 #include "../Validator/validator.h"
+#include "../BmpLib/bmp_parser.h"
 #include <stddef.h>
 
 Matrix crop(Matrix *matrix, Area *area)
@@ -28,6 +29,17 @@ Matrix crop(Matrix *matrix, Area *area)
 		}
 	}
 	return sub;
+}
+
+void create_canvas(Matrix *matrix, CanvasQuery *query)
+{
+	if(query == NULL)
+	{
+		return;
+	}
+	BMP *image = create_image(query->width,query->height, query->color);
+	unload_image(query->new_file, image);
+	safe_free_bmp(&image);
 }
 
 void paste(Matrix *dst, Matrix *src, Point *left_up)

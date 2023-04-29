@@ -142,4 +142,15 @@ const char *hint =
 	"\t\t\n"
 	"\t\t-f, --fill color               (optional) fill color in hex format; color from [#000000; #FFFFFF]\n"
 	"\t\t                               example: --fill \"#FF00FF\" (note: use \"\" to get correct input)\n\n"
-	"\t\t-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting\n";
+	"\t\t-n, --new <new_filename>.bmp   (optional) if option called then new file will be created instead of rewriting\n"
+	"\t\t\n"
+	"\t\t\n"
+	"\t--canvas [options]\n\n"
+	"\t\t-w, --width pixels             width of image\n"
+	"\t\t\n"
+	"\t\t-h, --height pixels            height of image\n"
+	"\t\t\n"
+	"\t\t-c, --color color              color of background in hex format; color from [#000000; #FFFFFF]\n"
+	"\t\t                               example: --color \"#FF00FF\" (note: use \"\" to get correct input)\n"
+	"\t\t\n"
+	"\t\t-n, --new <new_filename>.bmp   specifies name of output file (the existing file will be overwritten)\n";

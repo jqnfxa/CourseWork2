@@ -27,3 +27,4 @@ bool validate_frame(FrameQuery *query);
 bool validate_rotate(RotateQuery *query);
 bool validate_line(LineQuery *query);
 bool validate_polygon(PolygonQuery *query);
+bool validate_canvas(CanvasQuery *query);

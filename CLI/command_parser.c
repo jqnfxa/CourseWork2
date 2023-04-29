@@ -10,22 +10,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool (*QueryFunctions[6])(int32_t argc, char *argv[], char *file_name, void *query) = {
+bool (*QueryFunctions[7])(int32_t argc, char *argv[], char *file_name, void *query) = {
 	(bool (*)(int32_t, char **, char *, void *))parse_rectangle_query,
 	(bool (*)(int32_t, char **, char *, void *))parse_frame_query,
 	(bool (*)(int32_t, char **, char *, void *))parse_circle_query,
 	(bool (*)(int32_t, char **, char *, void *))parse_line_query,
 	(bool (*)(int32_t, char **, char *, void *))parse_polygon_query,
 	(bool (*)(int32_t, char **, char *, void *))parse_rotate_query,
+	(bool (*)(int32_t, char **, char *, void *))parse_canvas_query
 };
 
-bool (*TaskFunctions[6])(Matrix *matrix, void *query) = {
+bool (*TaskFunctions[7])(Matrix *matrix, void *query) = {
 	(bool (*)(Matrix *, void *))draw_rectangle,
 	(bool (*)(Matrix *, void *))complete_frame_query,
 	(bool (*)(Matrix *, void *))draw_circle,
 	(bool (*)(Matrix *, void *))draw_line,
 	(bool (*)(Matrix *, void *))draw_polygon,
 	(bool (*)(Matrix *, void *))rotate_area,
+	(bool (*)(Matrix *, void *))create_canvas
 };
 
 void free_query(int32_t query_idx, void *query)
@@ -64,6 +66,10 @@ void *get_query_structure(int32_t idx)
 		}
 		case ROTATE_IMAGE: {
 			query = calloc(1, sizeof(RotateQuery));
+			break;
+		}
+		case CREATE_CANVAS:{
+			query = calloc(1, sizeof(CanvasQuery));
 			break;
 		}
 		case UNDEFINED:
@@ -147,6 +153,7 @@ enum OPERATION_TYPE parse_user_command(int32_t argc, char *argv[])
 			{"polygon", no_argument, &operation_type, DRAW_POLYGON},
 			{"rotate", no_argument, &operation_type, ROTATE_IMAGE},
 			{"info", required_argument, &operation_type, PRINT_INFO},
+			{"canvas", no_argument, &operation_type, CREATE_CANVAS},
 			{"help", no_argument, NULL, 'h'},
 			{0, 0, 0, 0}};
 

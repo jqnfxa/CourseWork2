@@ -6,6 +6,7 @@
 #define END_POINT (1 << 1)
 #define COLOR (1 << 2)
 #define WIDTH (1 << 3)
+#define HEIGHT (1 << 11)
 #define FILL (1 << 4)
 #define NEW (1 << 5)
 #define POINT (1 << 6)
@@ -23,6 +24,7 @@ enum OPERATION_TYPE {
 	DRAW_LINE,
 	DRAW_POLYGON,
 	ROTATE_IMAGE,
+	CREATE_CANVAS,
 	PRINT_INFO
 };
 
@@ -101,6 +103,11 @@ typedef struct PolygonQuery {
 	char new_file[256];
 } PolygonQuery;
 
-typedef struct InfoQuery {
-	char file[256];
-} InfoQuery;
+typedef struct CanvasQuery {
+	int32_t width;
+	int32_t height;
+	int32_t color;
+	int32_t check_sum;
+
+	char new_file[256];
+} CanvasQuery;

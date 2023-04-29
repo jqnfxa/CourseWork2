@@ -498,3 +498,40 @@ bool validate_polygon(PolygonQuery *query)
 
 	return true;
 }
+
+bool validate_canvas(CanvasQuery *query)
+{
+	if(query == NULL)
+	{
+		return false;
+	}
+	if(!match_flags(query->check_sum, WIDTH))
+	{
+		log_error(MISSING_ARGUMENT, "--width");
+		return false;
+	}
+	if(!match_flags(query->check_sum, HEIGHT))
+	{
+		log_error(MISSING_ARGUMENT, "--height");
+		return false;
+	}
+	if(!match_flags(query->check_sum, COLOR))
+	{
+		log_error(MISSING_ARGUMENT, "--color");
+		return false;
+	}
+	if(!is_valid_rgb(query->color))
+	{
+		log_error(CONVERSATION, "--color");
+		return false;
+	}
+
+	// check if we have fill
+	if(!match_flags(query->check_sum, NEW) || !is_valid_bmp(query->new_file))
+	{
+		log_error(CONVERSATION, "--new");
+		return false;
+	}
+
+	return true;
+}
