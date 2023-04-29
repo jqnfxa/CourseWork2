@@ -396,11 +396,11 @@ void resize_image(BMP *image)
 
 	image->junk_bytes = closest - image->matrix.width * 3;
 
-	image->header.bfSize = image->junk_bytes * image->matrix.height + 3 * image->matrix.width * image->matrix.height + image->header.bfOffBits;
+	image->header.bfSize = image->junk_bytes * image->matrix.height + sizeof(RGB) * image->matrix.width * image->matrix.height + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 
 	image->dib_header.biWidth = image->matrix.width;
 	image->dib_header.biHeight = image->matrix.height;
-	image->dib_header.biSizeImage = image->header.bfSize - image->header.bfOffBits;
+	image->dib_header.biSizeImage = image->junk_bytes * image->matrix.height + sizeof(RGB) * image->matrix.width * image->matrix.height;
 }
 
 bool unload_image(const char *filename, BMP *picture)

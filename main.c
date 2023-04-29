@@ -3,14 +3,12 @@
 #include "ExceptionHandler/logger.h"
 #include <stdio.h>
 #include <string.h>
-#include <stdio.h>
 
 int main(int argc, char *argv[])
 {
 	char file_to_process[256];
 
 	enum OPERATION_TYPE query_idx = parse_user_command(argc, argv);
-
 	if(query_idx == UNDEFINED)
 	{
 		log_error(INVALID_QUERY, "");

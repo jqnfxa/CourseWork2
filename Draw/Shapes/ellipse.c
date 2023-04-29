@@ -1,13 +1,14 @@
 #include "ellipse.h"
 #include "../../Validator/validator.h"
 #include "../image.h"
-#include <stdlib.h>
+#include <math.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 void brezenham_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, bool filled)
 {
 	int32_t a = abs(x1 - x0), b = abs(y1 - y0), b1 = b & 1;   /* values of diameter */
-	long dx = 4 * (1 - a) * b * b, dy = 4 * (b1 + 1) * a * a;  /* error increment */
+	long dx = 4 * (1 - a) * b * b, dy = 4 * (b1 + 1) * a * a; /* error increment */
 	long err = dx + dy + b1 * a * a, e2;                      /* error of 1.step */
 
 	y0 += (b + 1) / 2;
@@ -63,56 +64,73 @@ void brezenham_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32
 	}
 }
 
+void ellipse_plot_points(Matrix *matrix, int32_t xc, int32_t yc, int32_t x, int32_t y, int32_t color, bool filled)
+{
+	if(filled)
+	{
+		xLine(matrix, xc - x, xc + x, yc + y, color);
+		xLine(matrix, xc - x, xc + x, yc - y, color);
+	}
+	else
+	{
+		set_pixel(matrix, xc + x, yc + y, color);
+		set_pixel(matrix, xc - x, yc + y, color);
+		set_pixel(matrix, xc + x, yc - y, color);
+		set_pixel(matrix, xc - x, yc - y, color);
+	}
+}
+
 void mid_point_ellipse(Matrix *matrix, int32_t xc, int32_t yc, int32_t rx, int32_t ry, int32_t color, bool filled)
 {
-	int Yr = -ry;
-	long long int Acc = -1 ;
-	long long int Rx2 = rx * rx;
-	long long int Ry2 = ry * ry;
+	int64_t a2 = rx * rx;
+	int64_t b2 = ry * ry;
+	int64_t twoa2 = 2 * a2;
+	int64_t twob2 = 2 * b2;
+	int64_t p;
+	int32_t x = 0;
+	int32_t y = ry;
+	int64_t px = 0;
+	int64_t py = twoa2 * y;
 
-	// Parse the first quadrant (trigonometric, so top-right quadrant).
-	for (int Xr = 0 ; Xr <= rx; ++Xr)
+	/* Plot the initial point in each quadrant. */
+	ellipse_plot_points(matrix, xc, yc, x, y, color, filled);
+
+	/* Region 1 */
+	p = (int64_t)round((double)b2 - (double)(a2 * ry) + (0.25 * (double)a2));
+	while(px < py)
 	{
-		// Plot horizontally, use the 4 possible symmetries.
-		if(filled)
+		x++;
+		px += twob2;
+		if(p < 0)
 		{
-			xLine(matrix, xc - Xr, xc + Xr, yc + Yr, color);
-			xLine(matrix, xc - Xr, xc + Xr, yc - Yr, color);
+			p += b2 + px;
 		}
 		else
 		{
-			set_pixel(matrix, xc + Xr, yc + Yr, color);
-			set_pixel(matrix, xc - Xr, yc + Yr, color);
-			set_pixel(matrix, xc + Xr, yc - Yr, color);
-			set_pixel(matrix, xc - Xr, yc - Yr, color);
+			y--;
+			py -= twoa2;
+			p += b2 + px - py;
 		}
+		ellipse_plot_points(matrix, xc, yc, x, y, color, filled);
+	}
 
-		// Add to accumulator only the delta part
-		Acc += 2 * Xr + 1 ;
-		// Test for a vertical "line", otherwise ellipse may not be complete.
-		// Do that either until we finished ellipse (Yr<0), or if we deviate too much (Acc>0).
-		while ((Acc > 0) && (Yr < 0))
+	/* Region 2 */
+	p = round(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
+	while(y > 0)
+	{
+		y--;
+		py -= twoa2;
+		if(p > 0)
 		{
-			// Start to plot vertically. Often reduced to one only pixel.
-			++Yr;
-			// Here: can draw an horizontal line from (X-Xr+1) to (X+Xr-1), line (Y+Yr).
-			// Color can be different from color used for border.
-
-			if(filled)
-			{
-				xLine(matrix, xc - Xr, xc + Xr, yc + Yr, color);
-				xLine(matrix, xc - Xr, xc + Xr, yc - Yr, color);
-			}
-			else
-			{
-				set_pixel(matrix, xc + Xr, yc + Yr, color);
-				set_pixel(matrix, xc - Xr, yc + Yr, color);
-				set_pixel(matrix, xc + Xr, yc - Yr, color);
-				set_pixel(matrix, xc - Xr, yc - Yr, color);
-			}
-			// Compute deviation.
-			Acc += (Rx2*(2*Yr + 1)) / Ry2 ;
+			p += a2 - py;
 		}
+		else
+		{
+			x++;
+			px += twob2;
+			p += a2 - py + px;
+		}
+		ellipse_plot_points(matrix, xc, yc, x, y, color, filled);
 	}
 }
 
