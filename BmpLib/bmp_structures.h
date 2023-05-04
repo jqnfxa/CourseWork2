@@ -32,13 +32,13 @@ typedef struct tagBITMAPFILEHEADER {
 #pragma pack(push, 1)
 
 typedef struct tagBITMAPV4HEADER {
-	int32_t biSize;
-	int32_t biWidth;
-	int32_t biHeight;
+	uint32_t biSize;
+	uint32_t biWidth;
+	uint32_t biHeight;
 	int16_t biPlanes;
 	int16_t biBitCount;
 	int32_t biCompression;
-	int32_t biSizeImage;
+	uint32_t biSizeImage;
 	int32_t biXPPM;
 	int32_t biYPPM;
 	int32_t biClrUsed;
@@ -59,13 +59,13 @@ typedef struct tagBITMAPV4HEADER {
 #pragma pack(push, 1)
 
 typedef struct tagBITMAPV5HEADER {
-	int32_t biSize;
-	int32_t biWidth;
-	int32_t biHeight;
+	uint32_t biSize;
+	uint32_t biWidth;
+	uint32_t biHeight;
 	int16_t biPlanes;
 	int16_t biBitCount;
 	int32_t biCompression;
-	int32_t biSizeImage;
+	uint32_t biSizeImage;
 	int32_t biXPPM;
 	int32_t biYPPM;
 	int32_t biClrUsed;
@@ -90,8 +90,8 @@ typedef struct tagBITMAPV5HEADER {
 #pragma pack(push, 1)
 
 typedef struct tagBITMAPCOREHEADER {
-	int32_t biSize;
-	int16_t biWidth;
+	uint32_t biSize;
+	uint16_t biWidth;
 	int16_t biHeight;
 	int16_t biPlanes;
 	int16_t biBitCount;
@@ -102,9 +102,9 @@ typedef struct tagBITMAPCOREHEADER {
 #pragma pack(push, 1)
 
 typedef struct tagBITMAPINFOHEADER {
-	int32_t biSize;
-	int32_t biWidth;
-	int32_t biHeight;
+	uint32_t biSize;
+	uint32_t biWidth;
+	uint32_t biHeight;
 	uint16_t biPlanes;
 	uint16_t biBitCount;
 	uint32_t biCompression;

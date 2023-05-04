@@ -103,7 +103,7 @@ BMP *create_image(int32_t width, int32_t height, int32_t color)
 
 	image->junk_bytes = closest - width * 3;
 	image->header.bfType = BMP_INDENTIFIER;
-	image->header.bfSize = image->junk_bytes * height + 3 * width * height + 54;
+	image->header.bfSize = image->junk_bytes * height + 3u * width * height + 54;
 	image->header.bfReserved1 = 0;
 	image->header.bfReserved2 = 0;
 	image->header.bfOffBits = 54;
@@ -171,10 +171,10 @@ bool dump_info_header(FILE *stream, FILE *file)
 
 	fprintf(stream, "Bitmap info header\n");
 	fprintf(stream, "bfType:      0x%x\n", file_header.bfType);
-	fprintf(stream, "bfSize:      %d\n", file_header.bfSize);
+	fprintf(stream, "bfSize:      %u\n", file_header.bfSize);
 	fprintf(stream, "bfReserved1: %d\n", file_header.bfReserved1);
 	fprintf(stream, "bfReserved2: %d\n", file_header.bfReserved2);
-	fprintf(stream, "bfOffBits:   %d\n\n", file_header.bfOffBits);
+	fprintf(stream, "bfOffBits:   %u\n\n", file_header.bfOffBits);
 
 	return true;
 }
@@ -207,9 +207,9 @@ bool dump_dib_header(FILE *stream, FILE *file)
 			}
 
 			fprintf(stream, "\nBitmap DIB header (BITMAPCOREHEADER)\n");
-			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
-			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
-			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
+			fprintf(stream, "biSize:      %u\n", dib_header.biSize);
+			fprintf(stream, "biWidth:     %u\n", dib_header.biWidth);
+			fprintf(stream, "biHeight:    %u\n", dib_header.biHeight);
 			fprintf(stream, "biPlanes:    %d\n", dib_header.biPlanes);
 			fprintf(stream, "biBitCount:  %d\n", dib_header.biBitCount);
 		}
@@ -224,13 +224,13 @@ bool dump_dib_header(FILE *stream, FILE *file)
 			}
 
 			fprintf(stream, "\nBitmap DIB header (BITMAPINFOHEADER)\n");
-			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
-			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
-			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
+			fprintf(stream, "biSize:      %u\n", dib_header.biSize);
+			fprintf(stream, "biWidth:     %u\n", dib_header.biWidth);
+			fprintf(stream, "biHeight:    %u\n", dib_header.biHeight);
 			fprintf(stream, "biPlanes:    %d\n", dib_header.biPlanes);
 			fprintf(stream, "biBitCount:  %d\n", dib_header.biBitCount);
 			fprintf(stream, "biCompress:  %s\n", CompressionStrings[dib_header.biCompression % 14]);
-			fprintf(stream, "biSizeImage: %d\n", dib_header.biSizeImage);
+			fprintf(stream, "biSizeImage: %u\n", dib_header.biSizeImage);
 			fprintf(stream, "biXPPM:      %d\n", dib_header.biXPPM);
 			fprintf(stream, "biYPPM:      %d\n", dib_header.biYPPM);
 			fprintf(stream, "biClrUsed:   %d\n", dib_header.biClrUsed);
@@ -247,13 +247,13 @@ bool dump_dib_header(FILE *stream, FILE *file)
 			}
 
 			fprintf(stream, "\nBitmap DIB header (BITMAPV4HEADER)\n");
-			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
-			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
-			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
+			fprintf(stream, "biSize:      %u\n", dib_header.biSize);
+			fprintf(stream, "biWidth:     %u\n", dib_header.biWidth);
+			fprintf(stream, "biHeight:    %u\n", dib_header.biHeight);
 			fprintf(stream, "biPlanes:    %d\n", dib_header.biPlanes);
 			fprintf(stream, "biBitCount:  %d\n", dib_header.biBitCount);
 			fprintf(stream, "biCompress:  %s\n", CompressionStrings[dib_header.biCompression % 14]);
-			fprintf(stream, "biSizeImage: %d\n", dib_header.biSizeImage);
+			fprintf(stream, "biSizeImage: %u\n", dib_header.biSizeImage);
 			fprintf(stream, "biXPPM:      %d\n", dib_header.biXPPM);
 			fprintf(stream, "biYPPM:      %d\n", dib_header.biYPPM);
 			fprintf(stream, "biClrUsed:   %d\n", dib_header.biClrUsed);
@@ -278,13 +278,13 @@ bool dump_dib_header(FILE *stream, FILE *file)
 			}
 
 			fprintf(stream, "\nBitmap DIB header (BITMAPV5HEADER)\n");
-			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
-			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
-			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
+			fprintf(stream, "biSize:      %u\n", dib_header.biSize);
+			fprintf(stream, "biWidth:     %u\n", dib_header.biWidth);
+			fprintf(stream, "biHeight:    %u\n", dib_header.biHeight);
 			fprintf(stream, "biPlanes:    %d\n", dib_header.biPlanes);
 			fprintf(stream, "biBitCount:  %d\n", dib_header.biBitCount);
 			fprintf(stream, "biCompress:  %s\n", CompressionStrings[dib_header.biCompression % 14]);
-			fprintf(stream, "biSizeImage: %d\n", dib_header.biSizeImage);
+			fprintf(stream, "biSizeImage: %u\n", dib_header.biSizeImage);
 			fprintf(stream, "biXPPM:      %d\n", dib_header.biXPPM);
 			fprintf(stream, "biYPPM:      %d\n", dib_header.biYPPM);
 			fprintf(stream, "biClrUsed:   %d\n", dib_header.biClrUsed);
