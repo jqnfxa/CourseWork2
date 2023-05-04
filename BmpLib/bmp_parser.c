@@ -129,7 +129,7 @@ void dump_info(FILE *stream, const char *filename)
 {
 	FILE *file = fopen(filename, "rb");
 
-	if(file == NULL)
+	if(file == NULL || !is_valid_bmp(filename))
 	{
 		log_error(FILE_OPEN, filename);
 		return;
@@ -246,7 +246,7 @@ bool dump_dib_header(FILE *stream, FILE *file)
 				return false;
 			}
 
-			fprintf(stream, "\nBitmap DIB header (BITMAPINFOHEADER)\n");
+			fprintf(stream, "\nBitmap DIB header (BITMAPV4HEADER)\n");
 			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
 			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
 			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);
@@ -277,7 +277,7 @@ bool dump_dib_header(FILE *stream, FILE *file)
 				return false;
 			}
 
-			fprintf(stream, "\nBitmap DIB header (BITMAPINFOHEADER)\n");
+			fprintf(stream, "\nBitmap DIB header (BITMAPV5HEADER)\n");
 			fprintf(stream, "biSize:      %d\n", dib_header.biSize);
 			fprintf(stream, "biWidth:     %d\n", dib_header.biWidth);
 			fprintf(stream, "biHeight:    %d\n", dib_header.biHeight);

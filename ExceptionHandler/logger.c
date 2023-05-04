@@ -51,7 +51,7 @@ const char *hint =
 	"\n"
 	"\t-h, --help                             print this useful hint\n"
 	"\t\n"
-	"\t-i, --info <filename>.bmp	       prints info about bmp file\n"
+	"\t--info <filename>.bmp\t\t       prints info about bmp file\n"
  	"\t\n"
 	"\t--rectangle [options] <filename>.bmp\n"
 	"\t\n"

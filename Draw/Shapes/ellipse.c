@@ -115,7 +115,7 @@ void mid_point_ellipse(Matrix *matrix, int32_t xc, int32_t yc, int32_t rx, int32
 	}
 
 	/* Region 2 */
-	p = round(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
+	p = (int64_t)round((double)b2 * (x + 0.5) * (x + 0.5) + (double)a2 * (y - 1) * (y - 1) - (double)a2 * (double)b2);
 	while(y > 0)
 	{
 		y--;
@@ -150,6 +150,14 @@ void draw_generic_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, in
 
 void draw_wide_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t width, int32_t color)
 {
+	int32_t max_width = (min(y1 - y0, x1 - x0) + 1) / 2;
+
+	if(width > max_width)
+	{
+		draw_generic_ellipse(matrix, x0, y0, x1, y1, color, 1);
+		return;
+	}
+
 	--width;
 	if(!width)
 	{

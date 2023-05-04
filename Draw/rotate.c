@@ -12,6 +12,11 @@ void rotate_area(Matrix *matrix, RotateQuery *info)
 	{
 		return;
 	}
+	if(info->area.left_up.x == info->area.right_bottom.x &&
+	   info->area.left_up.y == info->area.right_bottom.y)
+	{
+		return;
+	}
 
 	if(info->angle < 0)
 	{

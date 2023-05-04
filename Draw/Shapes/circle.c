@@ -15,7 +15,7 @@ void draw_circle(Matrix *matrix, CircleQuery *info)
 	{
 		if(info->radius == 0)
 		{
-			set_pixel(matrix, info->area.left_up.x, info->area.left_up.y, info->color);
+			set_pixel(matrix, info->center.x, info->center.y, info->color);
 			return;
 		}
 
@@ -31,11 +31,12 @@ void draw_circle(Matrix *matrix, CircleQuery *info)
 		return;
 	}
 
-	int32_t max_width = min(abs(info->area.left_up.x - info->area.right_bottom.x) / 2, abs(info->area.left_up.y - info->area.right_bottom.y) / 2);
+	int32_t max_width = (min(abs(info->area.left_up.x - info->area.right_bottom.x), abs(info->area.left_up.y - info->area.right_bottom.y)) + 1) / 2;
 
-	if(info->width >= max_width)
+	if(info->width > max_width)
 	{
-		info->width = max_width;
+		set_flags(&info->check_sum, FILL);
+		info->fill_color = info->color;
 	}
 
 	// check if we need to fill inner area

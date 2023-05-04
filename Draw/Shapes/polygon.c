@@ -113,7 +113,7 @@ void draw_elementary_line(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, in
 	if(dx == 0)
 	{
 		/* vertical */
-		for(i = 0; i < dy; i++)
+		for(i = 0; i <= dy; i++)
 		{
 			if(danger_color == -1)
 			{
@@ -129,7 +129,7 @@ void draw_elementary_line(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, in
 	else if(dy == 0)
 	{
 		/* horizontal */
-		for(i = 0; i < dx; i++)
+		for(i = 0; i <= dx; i++)
 		{
 			if(danger_color == -1)
 			{
@@ -150,7 +150,7 @@ void draw_elementary_line(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, in
 		e = dy - dx;
 		dx += dx;
 
-		for(i = 0; i < n; i++)
+		for(i = 0; i <= n; i++)
 		{
 			if(danger_color == -1)
 			{
@@ -177,7 +177,7 @@ void draw_elementary_line(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, in
 		e = dx - dy;
 		dy += dy;
 
-		for(i = 0; i < n; i++)
+		for(i = 0; i <= n; i++)
 		{
 			if(danger_color == -1)
 			{
@@ -266,7 +266,7 @@ int32_t polygon_generic(Matrix *matrix, int32_t n, Edge *e, int32_t color, int32
 		return -1;
 	}
 
-	for(i = 0; i < n; i++)
+	for(i = 0; i < n; ++i)
 	{
 		if(y_min > e[i].ymin)
 		{
@@ -299,10 +299,10 @@ int32_t polygon_generic(Matrix *matrix, int32_t n, Edge *e, int32_t color, int32
 		free(edge_table);
 		return -1;
 	}
-	for(; y_min <= y_max; y_min++)
+	for(; y_min <= y_max; ++y_min)
 	{
 		j = 0;
-		for(i = 0; i < edge_count; i++)
+		for(i = 0; i < edge_count; ++i)
 		{
 			Edge *current = edge_table[i];
 			if(y_min >= current->ymin && y_min <= current->ymax)
@@ -313,12 +313,12 @@ int32_t polygon_generic(Matrix *matrix, int32_t n, Edge *e, int32_t color, int32
 				{
 					// Needed to draw consistent polygons
 					xx[j] = xx[j - 1];
-					j++;
+					++j;
 				}
 				else if(current->dx != 0 && roundf(xx[j - 1]) == xx[j - 1])
 				{
 					// Connect discontiguous corners
-					for(k = 0; k < i; k++)
+					for(k = 0; k < i; ++k)
 					{
 						Edge *other_edge = edge_table[k];
 						if((current->dx > 0 && other_edge->dx <= 0) || (current->dx < 0 && other_edge->dx >= 0))

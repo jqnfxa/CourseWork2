@@ -10,7 +10,7 @@ typedef struct tagBMP {
 	BITMAPFILEHEADER header;
 	BITMAPINFOHEADER dib_header;
 	Matrix matrix;
-	uint32_t junk_bytes;// value to store junk bytes to alignment
+	uint32_t junk_bytes; // value to store junk bytes to alignment
 } BMP;
 
 // I/O
