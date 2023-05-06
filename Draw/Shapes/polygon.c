@@ -56,7 +56,7 @@ void draw_polygon(Matrix *matrix, PolygonQuery *info)
 	{
 		draw_elementary_polygon(matrix, info->points_count, info->points, info->fill_color, true, 1, -1);
 	}
-	if(info->color != info->fill_color)
+	if(!match_flags(info->check_sum, FILL) ||(info->color != info->fill_color && match_flags(info->check_sum, FILL)))
 	{
 		if(info->width == 1)
 		{
@@ -66,14 +66,14 @@ void draw_polygon(Matrix *matrix, PolygonQuery *info)
 		{
 			Matrix new_image = create(matrix->height, matrix->width);
 
-			int32_t avoid_color = invert_color(info->color);
-			draw_elementary_polygon(&new_image, info->points_count, info->points, avoid_color, 1, 1, -1);
+			unsafe_fill(&new_image, -2);
 
 			int32_t width = info->width * 2 - 1;
 
-			draw_elementary_polygon(&new_image, info->points_count, info->points, info->color, 0, width, 0x0);
+			draw_elementary_polygon(&new_image, info->points_count, info->points, -1, 1, 1, -1);
+			draw_elementary_polygon(&new_image, info->points_count, info->points, info->color, 0, width, -2);
 
-			int32_t avoid[] = {avoid_color, 0x0};
+			int32_t avoid[] = {-1, -2};
 
 			copy_additional(matrix, &new_image, avoid, 2);
 

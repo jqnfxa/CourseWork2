@@ -13,7 +13,7 @@ Matrix crop(Matrix *matrix, Area *area)
 
 	shrink_to_fit(matrix->width, matrix->height, area);
 
-	Matrix sub = create(area->right_bottom.y - area->left_up.y, area->right_bottom.x - area->left_up.x);
+	Matrix sub = create(area->right_bottom.y - area->left_up.y + 1, area->right_bottom.x - area->left_up.x + 1);
 
 	if(sub.grid == NULL)
 	{
@@ -21,9 +21,9 @@ Matrix crop(Matrix *matrix, Area *area)
 		return sub;
 	}
 
-	for(int32_t i = area->left_up.y, row = 0; i < area->right_bottom.y; ++i, ++row)
+	for(int32_t i = area->left_up.y, row = 0; i <= area->right_bottom.y; ++i, ++row)
 	{
-		for(int32_t j = area->left_up.x, column = 0; j < area->right_bottom.x; ++j, ++column)
+		for(int32_t j = area->left_up.x, column = 0; j <= area->right_bottom.x; ++j, ++column)
 		{
 			sub.grid[row][column] = matrix->grid[i][j];
 		}
@@ -44,20 +44,7 @@ void create_canvas(Matrix *matrix, CanvasQuery *query)
 
 void paste(Matrix *dst, Matrix *src, Point *left_up)
 {
-	if(dst == NULL || src == NULL || left_up == NULL ||
-	   left_up->x >= dst->width || left_up->y >= dst->height ||
-	   left_up->y + src->height < 0 || left_up->x + src->width < 0)
-	{
-		return;
-	}
-
-	for(int32_t i = 0, y = left_up->y; i < src->height; ++i, ++y)
-	{
-		for(int32_t j = 0, x = left_up->x; j < src->width; ++j, ++x)
-		{
-			set_pixel(dst, x, y, src->grid[i][j]);
-		}
-	}
+	paste_if(dst, src, left_up, -111);
 }
 
 void paste_if(Matrix *dst, Matrix *src, Point *left_up, int32_t skip_color)
@@ -83,13 +70,7 @@ void paste_if(Matrix *dst, Matrix *src, Point *left_up, int32_t skip_color)
 
 void set_pixel(Matrix *matrix, int32_t x, int32_t y, int32_t color)
 {
-	Point point = {x, y};
-	if(!is_in_bound(matrix, &point))
-	{
-		return;
-	}
-
-	matrix->grid[y][x] = color;
+	set_pixel_avoid(matrix, x, y, color, -111);
 }
 
 void set_pixel_avoid(Matrix *matrix, int32_t x, int32_t y, int32_t color, int danger_color)

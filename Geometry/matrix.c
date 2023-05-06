@@ -45,7 +45,25 @@ Matrix create_filled(int32_t rows, int32_t columns, int32_t color)
 
 void fill(Matrix *matrix, int32_t color)
 {
-	if(!is_valid_matrix(matrix) || matrix->grid == NULL || !is_valid_rgb(color))
+	if(!is_valid_matrix(matrix) || !is_valid_rgb(color))
+	{
+		return;
+	}
+
+	unsafe_fill(matrix, color);
+
+	for(int32_t i = 0; i < matrix->height; ++i)
+	{
+		for(int32_t j = 0; j < matrix->width; ++j)
+		{
+			matrix->grid[i][j] = color;
+		}
+	}
+}
+
+void unsafe_fill(Matrix *matrix, int32_t color)
+{
+	if(!is_valid_matrix(matrix))
 	{
 		return;
 	}

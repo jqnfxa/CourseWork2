@@ -49,13 +49,13 @@ void shrink_to_fit(int32_t width, int32_t height, Area *area)
 	{
 		area->left_up.y = 0;
 	}
-	if(area->right_bottom.x > width)
+	if(area->right_bottom.x >= width)
 	{
-		area->right_bottom.x = width;
+		area->right_bottom.x = width - 1;
 	}
-	if(area->right_bottom.y > height)
+	if(area->right_bottom.y >= height)
 	{
-		area->right_bottom.y = height;
+		area->right_bottom.y = height - 1;
 	}
 }
 
