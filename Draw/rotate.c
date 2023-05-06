@@ -80,10 +80,8 @@ Matrix rotate_advanced(Matrix *matrix, double angle)
 	double cosine = cos(angle);
 	double sine = sin(angle);
 
-	Matrix output = create((int32_t)round(fabs(matrix->height * cosine)) +
-							   (int32_t)round(fabs(matrix->width * sine)),
-						   (int32_t)round(fabs(matrix->width * cosine)) +
-							   (int32_t)round(fabs(matrix->height * sine)));
+	Matrix output = create((int32_t)round(fabs(matrix->height * cosine)) + (int32_t)round(fabs(matrix->width * sine)),
+						   (int32_t)round(fabs(matrix->width * cosine)) + (int32_t)round(fabs(matrix->height * sine)));
 
 	unsafe_fill(&output, -1);
 
