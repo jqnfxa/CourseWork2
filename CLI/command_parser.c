@@ -1,5 +1,5 @@
 #include "command_parser.h"
-#include "../Draw/Shapes/circle.h"
+#include "../Draw/Shapes/ellipse.h"
 #include "../Draw/Shapes/polygon.h"
 #include "../Draw/Shapes/rectangle.h"
 #include "../Draw/frame.h"

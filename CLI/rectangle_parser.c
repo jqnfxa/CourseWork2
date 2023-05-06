@@ -82,7 +82,7 @@ bool parse_rectangle_query(int32_t argc, char *argv[], char *file_name, Rectangl
 		log_error(WRONG_ARGUMENT_NUMBER, "for rectangle");
 		return false;
 	}
-	if(!is_valid_bmp(argv[optind]))
+	if(!is_valid_bmp_name(argv[optind]))
 	{
 		log_error(FILE_OPEN, argv[optind]);
 		return false;

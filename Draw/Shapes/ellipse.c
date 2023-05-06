@@ -5,8 +5,55 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+void draw_circle(Matrix *matrix, CircleQuery *info)
+{
+	if(!is_valid_matrix(matrix) || info == NULL)
+	{
+		return;
+	}
+	if(get_circle_type(info) == 1)
+	{
+		if(info->radius == 0)
+		{
+			set_pixel(matrix, info->center.x, info->center.y, info->color);
+			return;
+		}
+
+		info->area.left_up.x = info->center.x - info->radius;
+		info->area.left_up.y = info->center.y - info->radius;
+		info->area.right_bottom.x = info->center.x + info->radius;
+		info->area.right_bottom.y = info->center.y + info->radius;
+	}
+
+	// nothing to draw
+	if(!validate_image_area(matrix->width, matrix->height, &info->area))
+	{
+		return;
+	}
+
+	int32_t max_width = (min(abs(info->area.left_up.x - info->area.right_bottom.x), abs(info->area.left_up.y - info->area.right_bottom.y)) + 1) / 2;
+
+	if(info->width > max_width)
+	{
+		set_flags(&info->check_sum, FILL);
+		info->fill_color = info->color;
+	}
+
+	// check if we need to fill inner area
+	if(match_flags(info->check_sum, FILL))
+	{
+		draw_generic_ellipse(matrix, info->area.left_up.x, info->area.left_up.y, info->area.right_bottom.x, info->area.right_bottom.y, info->fill_color, 1);
+	}
+
+	draw_wide_ellipse(matrix, info->area.left_up.x, info->area.left_up.y, info->area.right_bottom.x, info->area.right_bottom.y, info->width, info->color);
+}
+
 void brezenham_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, bool filled)
 {
+	if(!is_valid_matrix(matrix))
+	{
+		return;
+	}
 	int32_t a = abs(x1 - x0), b = abs(y1 - y0), b1 = b & 1;   /* values of diameter */
 	long dx = 4 * (1 - a) * b * b, dy = 4 * (b1 + 1) * a * a; /* error increment */
 	long err = dx + dy + b1 * a * a, e2;                      /* error of 1.step */
@@ -66,6 +113,10 @@ void brezenham_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32
 
 void ellipse_plot_points(Matrix *matrix, int32_t xc, int32_t yc, int32_t x, int32_t y, int32_t color, bool filled)
 {
+	if(!is_valid_matrix(matrix))
+	{
+		return;
+	}
 	if(filled)
 	{
 		xLine(matrix, xc - x, xc + x, yc + y, color);
@@ -82,6 +133,10 @@ void ellipse_plot_points(Matrix *matrix, int32_t xc, int32_t yc, int32_t x, int3
 
 void mid_point_ellipse(Matrix *matrix, int32_t xc, int32_t yc, int32_t rx, int32_t ry, int32_t color, bool filled)
 {
+	if(!is_valid_matrix(matrix))
+	{
+		return;
+	}
 	int64_t a2 = rx * rx;
 	int64_t b2 = ry * ry;
 	int64_t twoa2 = 2 * a2;
@@ -136,6 +191,10 @@ void mid_point_ellipse(Matrix *matrix, int32_t xc, int32_t yc, int32_t rx, int32
 
 void draw_generic_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t color, bool filled)
 {
+	if(!is_valid_matrix(matrix))
+	{
+		return;
+	}
 	int32_t max_dx = max(x1 - x0, y1 - y0);
 
 	if(max_dx > 500)
@@ -150,6 +209,10 @@ void draw_generic_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, in
 
 void draw_wide_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t width, int32_t color)
 {
+	if(!is_valid_matrix(matrix))
+	{
+		return;
+	}
 	int32_t max_width = (min(y1 - y0, x1 - x0) + 1) / 2;
 
 	if(width > max_width)
@@ -165,14 +228,13 @@ void draw_wide_ellipse(Matrix *matrix, int32_t x0, int32_t y0, int32_t x1, int32
 		return;
 	}
 
-	for(int i = 0; i < width; ++i)
+	for(int32_t i = 0; i < width; ++i)
 	{
 		draw_generic_ellipse(matrix, x0 + i, y0 + i, x1 - i, y1 - i, color, 0);
 		draw_generic_ellipse(matrix, x0 + i + 1, y0 + i, x1 - i, y1 - i, color, 0);
 		draw_generic_ellipse(matrix, x0 + i, y0 + i, x1 - i - 1, y1 - i, color, 0);
 		draw_generic_ellipse(matrix, x0 + i, y0 + i + 1, x1 - i, y1 - i, color, 0);
 		draw_generic_ellipse(matrix, x0 + i, y0 + i, x1 - i, y1 - i - 1, color, 0);
-		//draw_generic_ellipse(matrix, x0 + width + 1, y0 + width + 1, x1 - width - 1, y1 - width - 1, color, 0);
 	}
 }
 

@@ -129,7 +129,7 @@ void dump_info(FILE *stream, const char *filename)
 {
 	FILE *file = fopen(filename, "rb");
 
-	if(file == NULL || !is_valid_bmp(filename))
+	if(file == NULL || !is_valid_bmp_name(filename))
 	{
 		log_error(FILE_OPEN, filename);
 		return;

@@ -18,7 +18,7 @@ bool is_valid_rgb(int32_t color);
 bool validate_area(Area *area);
 bool is_square_area(Area *area);
 bool validate_image_area(int32_t width, int32_t height, Area *area);
-bool is_valid_bmp(const char *file_name);
+bool is_valid_bmp_name(const char *file_name);
 
 bool validate_rectangle(RectangleQuery *query);
 int16_t get_circle_type(CircleQuery *query);

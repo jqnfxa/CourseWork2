@@ -72,7 +72,7 @@ bool parse_int(const char *argument, int32_t *val, const char *option_name, int3
 		return false;
 	}
 
-	*val = (int32_t)strtol(argument, NULL, base);
+	*val = (int32_t)tmp;
 	return true;
 }
 
@@ -87,7 +87,7 @@ bool parse_file_name(const char *argument, char *name, const char *option_name)
 		log_error(MISSING_ARGUMENT, option_name);
 		return false;
 	}
-	if(!is_valid_bmp(argument))
+	if(!is_valid_bmp_name(argument))
 	{
 		log_error(CONVERSATION, "--new");
 		return false;

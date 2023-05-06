@@ -134,7 +134,7 @@ bool validate_image_area(int32_t width, int32_t height, Area *area)
 	return true;
 }
 
-bool is_valid_bmp(const char *file_name)
+bool is_valid_bmp_name(const char *file_name)
 {
 	if(file_name == NULL)
 	{
@@ -527,7 +527,7 @@ bool validate_canvas(CanvasQuery *query)
 	}
 
 	// check if we have fill
-	if(!match_flags(query->check_sum, NEW) || !is_valid_bmp(query->new_file))
+	if(!match_flags(query->check_sum, NEW) || !is_valid_bmp_name(query->new_file))
 	{
 		log_error(CONVERSATION, "--new");
 		return false;
