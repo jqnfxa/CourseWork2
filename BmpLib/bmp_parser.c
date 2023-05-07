@@ -395,9 +395,7 @@ void resize_image(BMP *image)
 	for(closest = image->matrix.width * 3; closest % 4 != 0; ++closest) {}
 
 	image->junk_bytes = closest - image->matrix.width * 3;
-
 	image->header.bfSize = image->junk_bytes * image->matrix.height + sizeof(RGB) * image->matrix.width * image->matrix.height + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-
 	image->dib_header.biWidth = image->matrix.width;
 	image->dib_header.biHeight = image->matrix.height;
 	image->dib_header.biSizeImage = image->junk_bytes * image->matrix.height + sizeof(RGB) * image->matrix.width * image->matrix.height;
@@ -411,6 +409,9 @@ bool unload_image(const char *filename, BMP *picture)
 	}
 
 	FILE *output = fopen(filename, "wb");
+
+	// set size to zero because of dummy (not compressed) format
+	picture->dib_header.biSizeImage = 0;
 
 	if(output == NULL)
 	{

@@ -62,6 +62,11 @@ void rotate_area(Matrix *matrix, RotateQuery *info)
 	}
 	else
 	{
+		if(info->direction == RIGHT)
+		{
+			info->angle *= -1;
+		}
+
 		Matrix area_to_rotate = crop(matrix, &info->area);
 		Matrix rotated = rotate_advanced(&area_to_rotate, -info->angle * (M_PI / 180));
 

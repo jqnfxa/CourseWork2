@@ -9,7 +9,7 @@
 
 void complete_frame_query(Matrix *matrix, FrameQuery *query)
 {
-	if(!is_valid_matrix(matrix) || matrix->grid == NULL || query == NULL)
+	if(!is_valid_matrix(matrix) || query == NULL)
 	{
 		return;
 	}
@@ -32,7 +32,7 @@ void complete_frame_query(Matrix *matrix, FrameQuery *query)
 
 void gen_simple_lines(Matrix **src, int32_t frame_width, int32_t color)
 {
-	if(src == NULL || *src == NULL || (*src)->grid == NULL || !is_valid_rgb(color) || frame_width < 1)
+	if(src == NULL || !is_valid_matrix(*src) || !is_valid_rgb(color) || frame_width < 1)
 	{
 		return;
 	}
@@ -83,6 +83,11 @@ void gen_simple_lines(Matrix **src, int32_t frame_width, int32_t color)
 
 void gen_simple_circles(Matrix **src, int32_t frame_width, int32_t color)
 {
+	if(src == NULL || !is_valid_matrix(*src) || !is_valid_rgb(color) || frame_width < 1)
+	{
+		return;
+	}
+
 	Matrix matrix = create((*src)->height, (*src)->width);
 
 	Point pp = {0, 0};
