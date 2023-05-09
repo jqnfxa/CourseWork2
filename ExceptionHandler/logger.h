@@ -1,9 +1,8 @@
 #pragma once
+#define debug
 
 extern const char *hint;
 extern const char *error_messages[];
-
-#define debug
 
 enum ERROR_CODE {
 	FILE_OPEN = 0,

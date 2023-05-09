@@ -410,9 +410,6 @@ bool unload_image(const char *filename, BMP *picture)
 
 	FILE *output = fopen(filename, "wb");
 
-	// set size to zero because of dummy (not compressed) format
-	picture->dib_header.biSizeImage = 0;
-
 	if(output == NULL)
 	{
 		log_error(FILE_OPEN, filename);
