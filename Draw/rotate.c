@@ -68,7 +68,7 @@ void rotate_area(Matrix *matrix, RotateQuery *info)
 		}
 
 		Matrix area_to_rotate = crop(matrix, &info->area);
-		Matrix rotated = rotate_advanced(&area_to_rotate, -info->angle * (M_PI / 180));
+		Matrix rotated = rotate_advanced(&area_to_rotate, -info->angle * 0.017453292519943295);
 
 		Point pp = {(info->area.right_bottom.x + info->area.left_up.x) / 2 -  rotated.width / 2,
 					(info->area.right_bottom.y + info->area.left_up.y) / 2 -  rotated.height / 2};

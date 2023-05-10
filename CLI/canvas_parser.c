@@ -4,7 +4,6 @@
 #include "types_parser.h"
 #include <getopt.h>
 #include <string.h>
-#include <stdio.h>
 
 bool parse_canvas_query(int32_t argc, char *argv[], char *file_name, CanvasQuery *query)
 {

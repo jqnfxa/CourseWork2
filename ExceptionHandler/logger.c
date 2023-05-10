@@ -1,6 +1,7 @@
 #include "logger.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 const char *error_messages[] = {
 	"Failed to open file",
